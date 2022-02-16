@@ -21,12 +21,12 @@ export function addPausable(c: ContractBuilder, access: Access, pausableFns: Bas
 
 const functions = defineFunctions({
   pause: {
-    kind: 'public' as const,
+    kind: 'external' as const,
     args: [],
   },
 
   unpause: {
-    kind: 'public' as const,
+    kind: 'external' as const,
     args: [],
   },
 });

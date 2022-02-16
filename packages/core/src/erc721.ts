@@ -144,7 +144,7 @@ const functions = defineFunctions({
   },
 
   tokenURI: {
-    kind: 'public' as const,
+    kind: 'external' as const,
     args: [
       { name: 'tokenId', type: 'uint256' },
     ],
@@ -163,7 +163,7 @@ const functions = defineFunctions({
 function getMintFunction(incremental: boolean, uriStorage: boolean) {
   const fn = {
     name: 'safeMint',
-    kind: 'public' as const,
+    kind: 'external' as const,
     args: [
       { name: 'to', type: 'address' },
     ],

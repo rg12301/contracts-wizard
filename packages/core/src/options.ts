@@ -25,7 +25,7 @@ function convertPathToImport(relativePath: string): string {
 }
 
 export interface Options {
-  transformImport?: (path: string) => string };
+  transformImport?: (path: string) => string;
 }
 
 export interface Helpers extends Required<Options> {

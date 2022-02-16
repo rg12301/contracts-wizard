@@ -2,7 +2,7 @@ import type { BaseFunction } from './contract';
 
 export const supportsInterface: BaseFunction = {
   name: 'supportsInterface',
-  kind: 'public',
+  kind: 'external',
   args: [
     { name: 'interfaceId', type: 'bytes4' },
   ],

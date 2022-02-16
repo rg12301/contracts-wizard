@@ -47,7 +47,7 @@ export interface ContractFunction extends BaseFunction {
   final: boolean;
 }
 
-export type FunctionKind = 'internal' | 'public';
+export type FunctionKind = 'internal' | 'external';
 export type FunctionMutability = typeof mutabilityRank[number];
 
 // Order is important

@@ -188,7 +188,7 @@ const functions = defineFunctions({
   },
 
   mint: {
-    kind: 'public' as const,
+    kind: 'external' as const,
     args: [
       { name: 'to', type: 'address' },
       { name: 'amount', type: 'uint256' },
@@ -196,17 +196,17 @@ const functions = defineFunctions({
   },
 
   pause: {
-    kind: 'public' as const,
+    kind: 'external' as const,
     args: [],
   },
 
   unpause: {
-    kind: 'public' as const,
+    kind: 'external' as const,
     args: [],
   },
 
   snapshot: {
-    kind: 'public' as const,
+    kind: 'external' as const,
     args: [],
   },
 });

@@ -307,19 +307,19 @@ const functions = defineFunctions({
   votingDelay: {
     args: [],
     returns: ['uint256'],
-    kind: 'public',
+    kind: 'external',
     mutability: 'pure',
   },
   votingPeriod: {
     args: [],
     returns: ['uint256'],
-    kind: 'public',
+    kind: 'external',
     mutability: 'pure',
   },
   proposalThreshold: {
     args: [],
     returns: ['uint256'],
-    kind: 'public',
+    kind: 'external',
     mutability: 'pure',
   },
   quorum: {
@@ -327,7 +327,7 @@ const functions = defineFunctions({
       { name: 'blockNumber', type: 'uint256' },
     ],
     returns: ['uint256'],
-    kind: 'public',
+    kind: 'external',
     mutability: 'view',
   },
   getVotes: {
@@ -336,7 +336,7 @@ const functions = defineFunctions({
       { name: 'blockNumber', type: 'uint256' },
     ],
     returns: ['uint256'],
-    kind: 'public',
+    kind: 'external',
     mutability: 'view',
   },
   propose: {
@@ -347,7 +347,7 @@ const functions = defineFunctions({
       { name: 'description', type: 'string memory' },
     ],
     returns: ['uint256'],
-    kind: 'public',
+    kind: 'external',
   },
   _execute: {
     args: [
@@ -374,7 +374,7 @@ const functions = defineFunctions({
       { name: 'proposalId', type: 'uint256' },
     ],
     returns: ['ProposalState'],
-    kind: 'public',
+    kind: 'external',
     mutability: 'view',
   },
   _executor: {

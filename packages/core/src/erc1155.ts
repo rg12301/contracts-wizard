@@ -101,14 +101,14 @@ const functions = defineFunctions({
   },
 
   setURI: {
-    kind: 'public' as const,
+    kind: 'external' as const,
     args: [
       { name: 'newuri', type: 'string memory' },
     ],
   },
 
   mint: {
-    kind: 'public' as const,
+    kind: 'external' as const,
     args: [
       { name: 'account', type: 'address' },
       { name: 'id', type: 'uint256' },
@@ -118,7 +118,7 @@ const functions = defineFunctions({
   },
 
   mintBatch: {
-    kind: 'public' as const,
+    kind: 'external' as const,
     args: [
       { name: 'to', type: 'address' },
       { name: 'ids', type: 'uint256[] memory' },

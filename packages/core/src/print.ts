@@ -6,6 +6,8 @@ import { Options, Helpers, withHelpers } from './options';
 import { formatLines, spaceBetween, Lines } from './utils/format-lines';
 import { mapValues } from './utils/map-values';
 
+const IMPLICIT_ARGS = ['syscall_ptr : felt*,', 'pedersen_ptr : HashBuiltin*,', 'range_check_ptr'];
+
 export function printContract(contract: Contract, opts?: Options): string {
   const helpers = withHelpers(contract, opts);
 
@@ -82,8 +84,10 @@ function printConstructor(contract: Contract, helpers: Helpers): Lines[] {
     const head = helpers.upgradeable ? 'function initialize' : 'func constructor';
     const constructor = printFunction2(
       head,
+      IMPLICIT_ARGS,
       args,
       modifiers,
+      undefined,
       body,
     );
     if (!helpers.upgradeable) {
@@ -178,9 +182,9 @@ function printFunction(fn: ContractFunction, helpers: Helpers): Lines[] {
     modifiers.push(`override(${[...fn.override].map(transformName).join(', ')})`);
   }
 
-  if (fn.returns?.length) {
-    modifiers.push(`returns (${fn.returns.join(', ')})`);
-  }
+  // if (fn.returns?.length) {
+  //   modifiers.push(`returns (${fn.returns.join(', ')})`);
+  // }
 
   const code = [...fn.code];
 
@@ -192,8 +196,10 @@ function printFunction(fn: ContractFunction, helpers: Helpers): Lines[] {
   if (modifiers.length + fn.code.length > 1) {
     return printFunction2(
       'func ' + fn.name,
+      IMPLICIT_ARGS, // TODO define implicit args as objects and format them
       fn.args.map(a => printArgument(a, helpers)),
       modifiers,
+      fn.returns,
       code,
     );
   } else {
@@ -203,18 +209,34 @@ function printFunction(fn: ContractFunction, helpers: Helpers): Lines[] {
 
 // generic for functions and constructors
 // kindedName = 'function foo' or 'constructor'
-function printFunction2(kindedName: string, args: string[], modifiers: string[], code: Lines[]): Lines[] {
+function printFunction2(kindedName: string, implicitArgs: string[], args: string[], modifiers: string[], returns: string[] | undefined, code: Lines[]): Lines[] {
   const fn = [];
 
-  const headingLength = [kindedName, ...args, ...modifiers]
-    .map(s => s.length)
-    .reduce((a, b) => a + b);
+  modifiers.forEach(modifier => fn.push(`@${modifier}`));
+  fn.push(`${kindedName}{`);
 
-  if (headingLength <= 72) {
-    fn.push([`${kindedName}(${args.join(', ')})`, ...modifiers, ':'].join(' '));
+  fn.push([implicitArgs]);
+  
+  const formattedArgs = args.join(', ');
+  const formattedReturns = returns?.join(', ');
+
+  if (returns !== undefined) {
+    fn.push([`}(${formattedArgs}) -> (${formattedReturns}):`]);
   } else {
-    fn.push(`${kindedName}(${args.join(', ')})`, modifiers, ':');
+    fn.push([`}(${formattedArgs}):`]);
   }
+
+  // const headingLength = [kindedName, ...args, ...modifiers]
+  //   .map(s => s.length)
+  //   .reduce((a, b) => a + b);
+
+  // if (headingLength <= 72) {
+  //   fn.push([`(${args.join(', ')})`, ...modifiers, ':'].join(' '));
+  // } else {
+  //   fn.push(`(${args.join(', ')})`, modifiers, ':');
+  // }
+
+//  fn.push(`(${args.join(', ')})`, modifiers, ':');
 
   fn.push(code, 'end');
 
@@ -223,7 +245,7 @@ function printFunction2(kindedName: string, args: string[], modifiers: string[],
 
 function printArgument(arg: FunctionArgument, { transformName }: Helpers): string {
   const type = /^[A-Z]/.test(arg.type) ? transformName(arg.type) : arg.type;
-  return [type, arg.name].join(' ');
+  return `${arg.name}: ${type}`;//[type, arg.name].join(' ');
 }
 
 function printNatspecTags(tags: NatspecTag[]): string[] {

@@ -79,7 +79,7 @@ function addBase(c: ContractBuilder, { name }: GovernorOptions) {
   c.addParent(
     {
       name: 'Governor',
-      path: 'openzeppelin/contracts/governance/Governor.sol',
+      path: 'openzeppelin/contracts/governance/Governor',
     },
     [name],
   );
@@ -101,7 +101,7 @@ function addSettings(c: ContractBuilder, allOpts: Required<GovernorOptions>) {
     c.addParent(
       {
         name: 'GovernorSettings',
-        path: 'openzeppelin/contracts/governance/extensions/GovernorSettings.sol',
+        path: 'openzeppelin/contracts/governance/extensions/GovernorSettings',
       },
       [
         { value: getVotingDelay(allOpts), note: allOpts.delay },
@@ -181,7 +181,7 @@ function addCounting(c: ContractBuilder, { bravo }: GovernorOptions) {
   if (!bravo) {
     c.addParent({
       name: 'GovernorCountingSimple',
-      path: 'openzeppelin/contracts/governance/extensions/GovernorCountingSimple.sol',
+      path: 'openzeppelin/contracts/governance/extensions/GovernorCountingSimple',
     });
   }
 }
@@ -208,7 +208,7 @@ function addVotes(c: ContractBuilder, { votes }: GovernorOptions) {
 
   c.addParent({
     name: parentName,
-    path: `openzeppelin/contracts/governance/extensions/${parentName}.sol`,
+    path: `openzeppelin/contracts/governance/extensions/${parentName}`,
   }, [{ lit: tokenArg }]);
   c.addOverride(parentName, functions.getVotes);
 }
@@ -231,7 +231,7 @@ function addQuorum(c: ContractBuilder, opts: Required<GovernorOptions>) {
 
     c.addParent({
       name: 'GovernorVotesQuorumFraction',
-      path: 'openzeppelin/contracts/governance/extensions/GovernorVotesQuorumFraction.sol',
+      path: 'openzeppelin/contracts/governance/extensions/GovernorVotesQuorumFraction',
     }, [opts.quorumPercent]);
     c.addOverride('GovernorVotesQuorumFraction', functions.quorum);
   }
@@ -275,7 +275,7 @@ function addTimelock(c: ContractBuilder, { timelock }: GovernorOptions) {
 
   c.addParent({
     name: parentName,
-    path: `openzeppelin/contracts/governance/extensions/${parentName}.sol`,
+    path: `openzeppelin/contracts/governance/extensions/${parentName}`,
   }, [{ lit: timelockArg }]);
   c.addOverride('IGovernor', functions.propose);
   c.addOverride(parentName, functions._execute);
@@ -295,7 +295,7 @@ function addBravo(c: ContractBuilder, { bravo, timelock }: GovernorOptions) {
 
     c.addParent({
       name: 'GovernorCompatibilityBravo',
-      path: 'openzeppelin/contracts/governance/compatibility/GovernorCompatibilityBravo.sol',
+      path: 'openzeppelin/contracts/governance/compatibility/GovernorCompatibilityBravo',
     });
     c.addOverride('IGovernor', functions.state);
     c.addOverride('GovernorCompatibilityBravo', functions.propose);

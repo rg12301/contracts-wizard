@@ -5,7 +5,7 @@ import { defineFunctions } from './utils/define-functions';
 export function addPausable(c: ContractBuilder, access: Access, pausableFns: BaseFunction[]) {
   c.addParent({
     name: 'Pausable',
-    path: 'openzeppelin/contracts/security/Pausable.sol',
+    path: 'openzeppelin/contracts/security/Pausable',
   });
 
   for (const fn of pausableFns) {

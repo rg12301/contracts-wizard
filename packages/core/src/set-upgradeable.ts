@@ -15,7 +15,7 @@ export function setUpgradeable(c: ContractBuilder, upgradeable: Upgradeable, acc
 
   c.addParent({
     name: 'Initializable',
-    path: 'openzeppelin/contracts/proxy/utils/Initializable.sol',
+    path: 'openzeppelin/contracts/proxy/utils/Initializable',
   });
 
   switch (upgradeable) {
@@ -25,7 +25,7 @@ export function setUpgradeable(c: ContractBuilder, upgradeable: Upgradeable, acc
       setAccessControl(c, functions._authorizeUpgrade, access, 'UPGRADER');
       c.addParent({
         name: 'UUPSUpgradeable',
-        path: 'openzeppelin/contracts/proxy/utils/UUPSUpgradeable.sol',
+        path: 'openzeppelin/contracts/proxy/utils/UUPSUpgradeable',
       });
       c.addOverride('UUPSUpgradeable', functions._authorizeUpgrade);
       c.setFunctionBody([], functions._authorizeUpgrade);

@@ -86,6 +86,6 @@ export async function writeGeneratedSources(dir: string, subset: Subset): Promis
   await fs.mkdir(dir, { recursive: true });
 
   for (const { id, source } of generateSources(subset)) {
-    await fs.writeFile(path.format({ dir, name: id, ext: '.sol' }), source);
+    await fs.writeFile(path.format({ dir, name: id, ext: '.cairo' }), source);
   }
 }

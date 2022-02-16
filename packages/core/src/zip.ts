@@ -26,7 +26,7 @@ export function zipContract(c: Contract): JSZip {
   const { transformImport } = withHelpers(c);
   const contractsVariant = c.upgradeable ? '-upgradeable' : '';
 
-  const fileName = c.name + '.sol';
+  const fileName = c.name + '.cairo';
 
   const dependencies = {
     [fileName]: c.parents.map(p => transformImport(p.contract.path)),

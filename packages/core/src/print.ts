@@ -6,8 +6,6 @@ import { Options, Helpers, withHelpers } from './options';
 import { formatLines, spaceBetween, Lines } from './utils/format-lines';
 import { mapValues } from './utils/map-values';
 
-const SOLIDITY_VERSION = '0.8.4';
-
 export function printContract(contract: Contract, opts?: Options): string {
   const helpers = withHelpers(contract, opts);
 
@@ -21,15 +19,20 @@ export function printContract(contract: Contract, opts?: Options): string {
   return formatLines(
     ...spaceBetween(
       [
-        `// SPDX-License-Identifier: ${contract.license}`,
-        `pragma solidity ^${SOLIDITY_VERSION};`,
+        // TODO print license ${contract.license}
+        `%lang starknet`
       ],
 
-      contract.imports.map(p => `import "${helpers.transformImport(p)}";`),
+      [
+        `from starkware.cairo.common.cairo_builtins import HashBuiltin`,
+        `from starkware.cairo.common.uint256 import Uint256`
+      ],
+
+      contract.imports.map(p => `from ${helpers.transformImport(p)}`),
 
       [
         ...printNatspecTags(contract.natspecTags),
-        [`contract ${contract.name}`, ...printInheritance(contract, helpers), '{'].join(' '),
+        //[`contract ${contract.name}`, ...printInheritance(contract, helpers), '{'].join(' '),
 
         spaceBetween(
           printUsingFor(contract, helpers),
@@ -41,7 +44,7 @@ export function printContract(contract: Contract, opts?: Options): string {
           ...fns.override,
         ),
 
-        `}`,
+        //`}`,
       ],
     ),
   );
@@ -76,7 +79,7 @@ function printConstructor(contract: Contract, helpers: Helpers): Lines[] {
         contract.constructorCode,
       )
       : contract.constructorCode;
-    const head = helpers.upgradeable ? 'function initialize' : 'constructor';
+    const head = helpers.upgradeable ? 'function initialize' : 'func constructor';
     const constructor = printFunction2(
       head,
       args,

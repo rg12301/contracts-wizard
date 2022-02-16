@@ -5,7 +5,7 @@ import { printContract } from "./print";
 export function printContractVersioned(contract: Contract): string {
   return printContract(contract, {
     transformImport: p =>
-      p.replace(/^@openzeppelin\/contracts(-upgradeable)?/, `$&@${contractsVersion}`),
+      p.replace(/^openzeppelin\/contracts(-upgradeable)?/, `$&@${contractsVersion}`),
   });
 }
 

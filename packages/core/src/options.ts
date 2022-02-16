@@ -15,7 +15,7 @@ const upgradeableImport = (p: string) => {
   // Use path.posix to get forward slashes
   return path.posix.format({
     ext,
-    dir: dir.replace(/^@openzeppelin\/contracts/, '@openzeppelin/contracts-upgradeable'),
+    dir: dir.replace(/^openzeppelin\/contracts/, 'openzeppelin/contracts-upgradeable'),
     name: upgradeableName(name),
   });
 };

@@ -70,7 +70,7 @@ function addBase(c: ContractBuilder, name: string, symbol: string) {
   c.addParent(
     {
       name: 'ERC20',
-      path: '@openzeppelin/contracts/token/ERC20/ERC20.sol',
+      path: 'openzeppelin/contracts/token/ERC20_base',
     },
     [name, symbol],
   );
@@ -84,14 +84,14 @@ function addBase(c: ContractBuilder, name: string, symbol: string) {
 function addBurnable(c: ContractBuilder) {
   c.addParent({
     name: 'ERC20Burnable',
-    path: '@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol',
+    path: 'openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol',
   });
 }
 
 function addSnapshot(c: ContractBuilder, access: Access) {
   c.addParent({
     name: 'ERC20Snapshot',
-    path: '@openzeppelin/contracts/token/ERC20/extensions/ERC20Snapshot.sol',
+    path: 'openzeppelin/contracts/token/ERC20/extensions/ERC20Snapshot.sol',
   });
 
   c.addOverride('ERC20Snapshot', functions._beforeTokenTransfer);
@@ -127,7 +127,7 @@ function addMintable(c: ContractBuilder, access: Access) {
 function addPermit(c: ContractBuilder, name: string) {
   c.addParent({
     name: 'ERC20Permit',
-    path: '@openzeppelin/contracts/token/ERC20/extensions/draft-ERC20Permit.sol',
+    path: 'openzeppelin/contracts/token/ERC20/extensions/draft-ERC20Permit.sol',
   }, [name]);
 }
 
@@ -138,7 +138,7 @@ function addVotes(c: ContractBuilder) {
 
   c.addParent({
     name: 'ERC20Votes',
-    path: '@openzeppelin/contracts/token/ERC20/extensions/ERC20Votes.sol',
+    path: 'openzeppelin/contracts/token/ERC20/extensions/ERC20Votes.sol',
   });
   c.addOverride('ERC20Votes', functions._mint);
   c.addOverride('ERC20Votes', functions._burn);
@@ -148,7 +148,7 @@ function addVotes(c: ContractBuilder) {
 function addFlashMint(c: ContractBuilder) {
   c.addParent({
     name: 'ERC20FlashMint',
-    path: '@openzeppelin/contracts/token/ERC20/extensions/ERC20FlashMint.sol',
+    path: 'openzeppelin/contracts/token/ERC20/extensions/ERC20FlashMint.sol',
   });
 }
 

@@ -61,7 +61,7 @@ function addBase(c: ContractBuilder, name: string, symbol: string) {
   c.addParent(
     {
       name: 'ERC721',
-      path: '@openzeppelin/contracts/token/ERC721/ERC721.sol',
+      path: 'openzeppelin/contracts/token/ERC721/ERC721.sol',
     },
     [name, symbol],
   );
@@ -80,7 +80,7 @@ function addBaseURI(c: ContractBuilder, baseUri: string) {
 function addEnumerable(c: ContractBuilder) {
   c.addParent({
     name: 'ERC721Enumerable',
-    path: '@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol',
+    path: 'openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol',
   });
 
   c.addOverride('ERC721Enumerable', functions._beforeTokenTransfer);
@@ -90,7 +90,7 @@ function addEnumerable(c: ContractBuilder) {
 function addURIStorage(c: ContractBuilder) {
   c.addParent({
     name: 'ERC721URIStorage',
-    path: '@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol',
+    path: 'openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol',
   });
 
   c.addOverride('ERC721URIStorage', functions._burn);
@@ -100,7 +100,7 @@ function addURIStorage(c: ContractBuilder) {
 function addBurnable(c: ContractBuilder) {
   c.addParent({
     name: 'ERC721Burnable',
-    path: '@openzeppelin/contracts/token/ERC721/extensions/ERC721Burnable.sol',
+    path: 'openzeppelin/contracts/token/ERC721/extensions/ERC721Burnable.sol',
   });
 }
 
@@ -111,7 +111,7 @@ function addMintable(c: ContractBuilder, access: Access, incremental = false, ur
   if (incremental) {
     c.addUsing({
       name: 'Counters',
-      path: '@openzeppelin/contracts/utils/Counters.sol',
+      path: 'openzeppelin/contracts/utils/Counters.sol',
     }, 'Counters.Counter');
     c.addVariable('Counters.Counter private _tokenIdCounter;');
     c.addFunctionCode('uint256 tokenId = _tokenIdCounter.current();', fn);

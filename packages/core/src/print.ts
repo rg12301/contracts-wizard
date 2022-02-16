@@ -30,8 +30,8 @@ export function printContract(contract: Contract, opts?: Options): string {
 
       contract.imports.map(p => `from ${helpers.transformImport(p)}`),
 
-      [
-        ...printNatspecTags(contract.natspecTags),
+      //[
+        //...printNatspecTags(contract.natspecTags),
         //[`contract ${contract.name}`, ...printInheritance(contract, helpers), '{'].join(' '),
 
         spaceBetween(
@@ -45,7 +45,7 @@ export function printContract(contract: Contract, opts?: Options): string {
         ),
 
         //`}`,
-      ],
+      //],
     ),
   );
 }
@@ -191,7 +191,7 @@ function printFunction(fn: ContractFunction, helpers: Helpers): Lines[] {
 
   if (modifiers.length + fn.code.length > 1) {
     return printFunction2(
-      'function ' + fn.name,
+      'func ' + fn.name,
       fn.args.map(a => printArgument(a, helpers)),
       modifiers,
       code,
@@ -210,17 +210,13 @@ function printFunction2(kindedName: string, args: string[], modifiers: string[],
     .map(s => s.length)
     .reduce((a, b) => a + b);
 
-  const braces = code.length > 0 ? '{' : '{}';
-
   if (headingLength <= 72) {
-    fn.push([`${kindedName}(${args.join(', ')})`, ...modifiers, braces].join(' '));
+    fn.push([`${kindedName}(${args.join(', ')})`, ...modifiers, ':'].join(' '));
   } else {
-    fn.push(`${kindedName}(${args.join(', ')})`, modifiers, braces);
+    fn.push(`${kindedName}(${args.join(', ')})`, modifiers, ':');
   }
 
-  if (code.length > 0) {
-    fn.push(code, '}');
-  }
+  fn.push(code, 'end');
 
   return fn;
 }

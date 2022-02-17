@@ -21,6 +21,8 @@ export interface ERC20Options extends CommonOptions {
 
 export function buildERC20(opts: ERC20Options): Contract {
   const c = new ContractBuilder(opts.name);
+  c.addConstructorArgument({ name:'initial_supply', type:'Uint256' });
+  c.addConstructorArgument({ name:'recipient', type:'felt' });
 
   const { access, upgradeable, info } = withCommonDefaults(opts);
 
@@ -72,7 +74,7 @@ function addBase(c: ContractBuilder, name: string, symbol: string) {
       name: 'ERC20',
       path: 'contracts/token/ERC20_base',
     },
-    [name, symbol],
+    [name, symbol, { lit:'initial_supply' }, { lit:'recipient' }],
   );
 }
 
@@ -116,7 +118,7 @@ function addBase(c: ContractBuilder, name: string, symbol: string) {
 
 function addMintable(c: ContractBuilder, access: Access) {
   setAccessControl(c, functions.mint, access, 'MINTER');
-  c.addFunctionCode('_mint(to, amount);', functions.mint);
+  //c.addFunctionCode('_mint(to, amount);', functions.mint);
 }
 
 // function addPermit(c: ContractBuilder, name: string) {

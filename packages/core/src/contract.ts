@@ -74,11 +74,10 @@ export class ContractBuilder implements Contract {
 
   private parentMap: Map<string, Parent> = new Map<string, Parent>();
   private functionMap: Map<string, ContractFunction> = new Map();
-  constructorImplicitArgs: FunctionArgument[];
+  readonly constructorImplicitArgs: FunctionArgument[] = withImplicitArgs();
 
   constructor(name: string) {
     this.name = toIdentifier(name, true);
-    this.constructorImplicitArgs = withImplicitArgs();
   }
 
   get parents(): Parent[] {

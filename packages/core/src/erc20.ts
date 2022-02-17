@@ -37,7 +37,7 @@ export function buildERC20(opts: ERC20Options): Contract {
   // }
 
   if (opts.pausable) {
-    addPausable(c, access, []);
+    addPausable(c, access, [functions.approve]);
   }
 
   // if (opts.premint) {
@@ -157,6 +157,17 @@ const functions = defineFunctions({
     ],
   },
 
+  approve: {
+    module: 'ERC20',
+    kind: 'external' as const,
+    implicitArgs: withImplicitArgs(),
+    returns: [{ name: 'success', type: 'felt' }],
+    returnValue: 'TRUE',
+    args: [
+      { name: 'spender', type: 'felt' },
+      { name: 'amount', type: 'Uint256' },
+    ],
+  },
 
   // pause: {
   //   kind: 'external' as const,

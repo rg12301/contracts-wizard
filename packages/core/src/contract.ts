@@ -39,6 +39,7 @@ export interface BaseFunction {
   implicitArgs?: FunctionArgument[];
   args: FunctionArgument[];
   returns?: FunctionArgument[];
+  returnValue?: string;
   kind?: FunctionKind;
 }
 

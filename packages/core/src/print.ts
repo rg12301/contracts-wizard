@@ -193,7 +193,7 @@ function printFunction(fn: ContractFunction, helpers: Helpers): Lines[] {
       IMPLICIT_ARGS, // TODO define implicit args as objects and format them
       fn.args.map(a => printArgument(a, helpers)),
       modifiers,
-      fn.returns,
+      fn.returns?.map(a => typeof a === 'string' ? a : printArgument(a, helpers)),
       code,
     );
   } else {

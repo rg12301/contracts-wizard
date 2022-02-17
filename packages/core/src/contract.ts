@@ -31,10 +31,12 @@ export interface Using {
   usingFor: string;
 }
 
+export type ReturnArgument = string | FunctionArgument; // TODO cleanup
+
 export interface BaseFunction {
   name: string;
   args: FunctionArgument[];
-  returns?: string[];
+  returns?: ReturnArgument[];
   kind: FunctionKind;
   mutability?: FunctionMutability;
 }

@@ -56,7 +56,7 @@
     }
 
     $: code = printContract(contract);
-    $: highlightedCode = hljs.highlight('solidity', code).value;
+    $: highlightedCode = hljs.highlight(code, {language: 'python'}).value;
 
     const copyHandler = async () => {
       await navigator.clipboard.writeText(code);

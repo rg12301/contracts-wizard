@@ -10,7 +10,8 @@ export function addPausable(c: ContractBuilder, access: Access, pausableFns: Bas
   });
 
   for (const fn of pausableFns) {
-    c.addModifier('when_not_paused', fn);
+    // TODO add these base functions to parent imports
+    c.addModifier('Pausable_when_not_paused()', fn);
   }
 
   setAccessControl(c, functions.pause, access, 'PAUSER');

@@ -34,11 +34,11 @@ export function buildERC20(opts: ERC20Options): Contract {
   c.addFunction(functions.increaseAllowance);
   c.addFunction(functions.decreaseAllowance);
 
-  c.addFunctionCode(`# Cairo equivalent to 'return (true)'`, functions.transfer);
-  c.addFunctionCode(`# Cairo equivalent to 'return (true)'`, functions.transferFrom);
-  c.addFunctionCode(`# Cairo equivalent to 'return (true)'`, functions.approve);
-  c.addFunctionCode(`# Cairo equivalent to 'return (true)'`, functions.increaseAllowance);
-  c.addFunctionCode(`# Cairo equivalent to 'return (true)'`, functions.decreaseAllowance);
+  // c.addFunctionCode(`# Cairo equivalent to 'return (true)'`, functions.transfer);
+  // c.addFunctionCode(`# Cairo equivalent to 'return (true)'`, functions.transferFrom);
+  // c.addFunctionCode(`# Cairo equivalent to 'return (true)'`, functions.approve);
+  // c.addFunctionCode(`# Cairo equivalent to 'return (true)'`, functions.increaseAllowance);
+  // c.addFunctionCode(`# Cairo equivalent to 'return (true)'`, functions.decreaseAllowance);
 
   // if (opts.burnable) {
   //   addBurnable(c);
@@ -49,7 +49,7 @@ export function buildERC20(opts: ERC20Options): Contract {
   // }
 
   if (opts.pausable) {
-    addPausable(c, access, [functions.approve]);
+    addPausable(c, access, [functions.transfer, functions.transferFrom, functions.approve, functions.increaseAllowance, functions.decreaseAllowance]);
   }
 
   // if (opts.premint) {

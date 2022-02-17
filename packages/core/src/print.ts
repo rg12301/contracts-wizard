@@ -188,8 +188,16 @@ function printFunction(fn: ContractFunction, helpers: Helpers): Lines[] {
   //   code.push(fn.returns?.length ? 'return ' + superCall : superCall);
   // }
 
+  // TODO
+  fn.modifiers.forEach(modifier => {
+    const modifierCall = `${modifier}`;
+    code.push(modifierCall);
+  });
+
   const superCall = `${fn.module}_${fn.name}(${fn.args.map(a => a.name).join(', ')})`;
   code.push(superCall);
+
+
 
   code.push(...fn.code);
 

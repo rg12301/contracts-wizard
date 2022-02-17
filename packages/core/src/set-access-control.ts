@@ -9,7 +9,7 @@ export function setAccessControl(c: ContractBuilder, fn: BaseFunction, access: A
   switch (access) {
     case 'ownable': {
       c.addParent(parents.Ownable);
-      c.addModifier('onlyOwner', fn);
+      c.addModifier('Ownable_only_owner()', fn);
       break;
     }
     case 'roles': {

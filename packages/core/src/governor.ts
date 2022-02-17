@@ -1,4 +1,4 @@
-import { supportsInterface } from "./common-functions";
+// import { supportsInterface } from "./common-functions";
 import { CommonOptions, withCommonDefaults } from "./common-options";
 import { ContractBuilder, Contract } from "./contract";
 import { OptionsError } from "./error";
@@ -60,13 +60,13 @@ export function buildGovernor(opts: GovernorOptions): Contract {
 
   const c = new ContractBuilder(allOpts.name);
 
-  addBase(c, allOpts);
-  addSettings(c, allOpts);
-  addCounting(c, allOpts);
-  addBravo(c, allOpts);
-  addVotes(c, allOpts);
-  addQuorum(c, allOpts);
-  addTimelock(c, allOpts);
+  // addBase(c, allOpts);
+  // addSettings(c, allOpts);
+  // addCounting(c, allOpts);
+  // addBravo(c, allOpts);
+  // addVotes(c, allOpts);
+  // addQuorum(c, allOpts);
+  // addTimelock(c, allOpts);
 
   setUpgradeable(c, allOpts.upgradeable, allOpts.access);
 
@@ -83,304 +83,304 @@ function addBase(c: ContractBuilder, { name }: GovernorOptions) {
     },
     [name],
   );
-  c.addOverride('IGovernor', functions.votingDelay);
-  c.addOverride('IGovernor', functions.votingPeriod);
-  c.addOverride('IGovernor', functions.quorum);
-  c.addOverride('IGovernor', functions.getVotes);
-  c.addOverride('Governor', functions.state);
-  c.addOverride('Governor', functions.propose);
-  c.addOverride('Governor', functions.proposalThreshold);
-  c.addOverride('Governor', functions._execute);
-  c.addOverride('Governor', functions._cancel);
-  c.addOverride('Governor', functions._executor);
-  c.addOverride('Governor', supportsInterface);
+  // c.addOverride('IGovernor', functions.votingDelay);
+  // c.addOverride('IGovernor', functions.votingPeriod);
+  // c.addOverride('IGovernor', functions.quorum);
+  // c.addOverride('IGovernor', functions.getVotes);
+  // c.addOverride('Governor', functions.state);
+  // c.addOverride('Governor', functions.propose);
+  // c.addOverride('Governor', functions.proposalThreshold);
+  // c.addOverride('Governor', functions._execute);
+  // c.addOverride('Governor', functions._cancel);
+  // c.addOverride('Governor', functions._executor);
+  // c.addOverride('Governor', supportsInterface);
 }
 
-function addSettings(c: ContractBuilder, allOpts: Required<GovernorOptions>) {
-  if (allOpts.settings) {
-    c.addParent(
-      {
-        name: 'GovernorSettings',
-        path: 'openzeppelin/contracts/governance/extensions/GovernorSettings',
-      },
-      [
-        { value: getVotingDelay(allOpts), note: allOpts.delay },
-        { value: getVotingPeriod(allOpts), note: allOpts.period },
-        { lit: getProposalThreshold(allOpts) },
-      ],
-    );
-    c.addOverride('GovernorSettings', functions.votingDelay, 'view');
-    c.addOverride('GovernorSettings', functions.votingPeriod, 'view');
-    c.addOverride('GovernorSettings', functions.proposalThreshold, 'view');
-  } else {
-    setVotingParameters(c, allOpts);
-    setProposalThreshold(c, allOpts);
-  }
-}
+// function addSettings(c: ContractBuilder, allOpts: Required<GovernorOptions>) {
+//   if (allOpts.settings) {
+//     c.addParent(
+//       {
+//         name: 'GovernorSettings',
+//         path: 'openzeppelin/contracts/governance/extensions/GovernorSettings',
+//       },
+//       [
+//         { value: getVotingDelay(allOpts), note: allOpts.delay },
+//         { value: getVotingPeriod(allOpts), note: allOpts.period },
+//         { lit: getProposalThreshold(allOpts) },
+//       ],
+//     );
+//     c.addOverride('GovernorSettings', functions.votingDelay, 'view');
+//     c.addOverride('GovernorSettings', functions.votingPeriod, 'view');
+//     c.addOverride('GovernorSettings', functions.proposalThreshold, 'view');
+//   } else {
+//     setVotingParameters(c, allOpts);
+//     setProposalThreshold(c, allOpts);
+//   }
+// }
 
-function getVotingDelay(opts: Required<GovernorOptions>): number {
-  try {
-    return durationToBlocks(opts.delay, opts.blockTime);
-  } catch (e) {
-    if (e instanceof Error) {
-      throw new OptionsError({
-        delay: e.message,
-      });
-    } else {
-      throw e;
-    }
-  }
-}
+// function getVotingDelay(opts: Required<GovernorOptions>): number {
+//   try {
+//     return durationToBlocks(opts.delay, opts.blockTime);
+//   } catch (e) {
+//     if (e instanceof Error) {
+//       throw new OptionsError({
+//         delay: e.message,
+//       });
+//     } else {
+//       throw e;
+//     }
+//   }
+// }
 
-function getVotingPeriod(opts: Required<GovernorOptions>): number {
-  try {
-    return durationToBlocks(opts.period, opts.blockTime);
-  } catch (e) {
-    if (e instanceof Error) {
-      throw new OptionsError({
-        period: e.message,
-      });
-    } else {
-      throw e;
-    }
-  }
-}
+// function getVotingPeriod(opts: Required<GovernorOptions>): number {
+//   try {
+//     return durationToBlocks(opts.period, opts.blockTime);
+//   } catch (e) {
+//     if (e instanceof Error) {
+//       throw new OptionsError({
+//         period: e.message,
+//       });
+//     } else {
+//       throw e;
+//     }
+//   }
+// }
 
-function getProposalThreshold({ proposalThreshold, decimals }: Required<GovernorOptions>): string {
-  if (!/^\d+$/.test(proposalThreshold)) {
-    throw new OptionsError({
-      proposalThreshold: 'Not a valid number',
-    });
-  }
+// function getProposalThreshold({ proposalThreshold, decimals }: Required<GovernorOptions>): string {
+//   if (!/^\d+$/.test(proposalThreshold)) {
+//     throw new OptionsError({
+//       proposalThreshold: 'Not a valid number',
+//     });
+//   }
 
-  if (/^0+$/.test(proposalThreshold)) {
-    return proposalThreshold;
-  } else {
-    return `${proposalThreshold}e${decimals}`;
-  }
-}
+//   if (/^0+$/.test(proposalThreshold)) {
+//     return proposalThreshold;
+//   } else {
+//     return `${proposalThreshold}e${decimals}`;
+//   }
+// }
 
-function setVotingParameters(c: ContractBuilder, opts: Required<GovernorOptions>) {
-  const delayBlocks = getVotingDelay(opts);
-  c.setFunctionBody([`return ${delayBlocks}; // ${opts.delay}`], functions.votingDelay);
+// function setVotingParameters(c: ContractBuilder, opts: Required<GovernorOptions>) {
+//   const delayBlocks = getVotingDelay(opts);
+//   c.setFunctionBody([`return ${delayBlocks}; // ${opts.delay}`], functions.votingDelay);
 
-  const periodBlocks = getVotingPeriod(opts);
-  c.setFunctionBody([`return ${periodBlocks}; // ${opts.period}`], functions.votingPeriod);
-}
+//   const periodBlocks = getVotingPeriod(opts);
+//   c.setFunctionBody([`return ${periodBlocks}; // ${opts.period}`], functions.votingPeriod);
+// }
 
-function setProposalThreshold(c: ContractBuilder, opts: Required<GovernorOptions>) {
-  const threshold = getProposalThreshold(opts);
-  const nonZeroThreshold = parseInt(threshold) !== 0;
+// function setProposalThreshold(c: ContractBuilder, opts: Required<GovernorOptions>) {
+//   const threshold = getProposalThreshold(opts);
+//   const nonZeroThreshold = parseInt(threshold) !== 0;
 
-  if (nonZeroThreshold) {
-    c.setFunctionBody([`return ${threshold};`], functions.proposalThreshold);
-  }
-}
+//   if (nonZeroThreshold) {
+//     c.setFunctionBody([`return ${threshold};`], functions.proposalThreshold);
+//   }
+// }
 
-function addCounting(c: ContractBuilder, { bravo }: GovernorOptions) {
-  if (!bravo) {
-    c.addParent({
-      name: 'GovernorCountingSimple',
-      path: 'openzeppelin/contracts/governance/extensions/GovernorCountingSimple',
-    });
-  }
-}
+// function addCounting(c: ContractBuilder, { bravo }: GovernorOptions) {
+//   if (!bravo) {
+//     c.addParent({
+//       name: 'GovernorCountingSimple',
+//       path: 'openzeppelin/contracts/governance/extensions/GovernorCountingSimple',
+//     });
+//   }
+// }
 
-const votesModules = {
-  erc20votes: {
-    tokenType: 'IVotes',
-    parentName: 'GovernorVotes',
-  },
-  comp: {
-    tokenType: 'ERC20VotesComp',
-    parentName: 'GovernorVotesComp',
-  },
-} as const;
+// const votesModules = {
+//   erc20votes: {
+//     tokenType: 'IVotes',
+//     parentName: 'GovernorVotes',
+//   },
+//   comp: {
+//     tokenType: 'ERC20VotesComp',
+//     parentName: 'GovernorVotesComp',
+//   },
+// } as const;
 
-function addVotes(c: ContractBuilder, { votes }: GovernorOptions) {
-  const tokenArg = '_token';
-  const { tokenType, parentName } = votesModules[votes];
+// function addVotes(c: ContractBuilder, { votes }: GovernorOptions) {
+//   const tokenArg = '_token';
+//   const { tokenType, parentName } = votesModules[votes];
 
-  c.addConstructorArgument({
-    type: tokenType,
-    name: tokenArg,
-  });
+//   c.addConstructorArgument({
+//     type: tokenType,
+//     name: tokenArg,
+//   });
 
-  c.addParent({
-    name: parentName,
-    path: `openzeppelin/contracts/governance/extensions/${parentName}`,
-  }, [{ lit: tokenArg }]);
-  c.addOverride(parentName, functions.getVotes);
-}
+//   c.addParent({
+//     name: parentName,
+//     path: `openzeppelin/contracts/governance/extensions/${parentName}`,
+//   }, [{ lit: tokenArg }]);
+//   c.addOverride(parentName, functions.getVotes);
+// }
 
-export const numberPattern = /^(?!$)(\d*)(?:\.(\d+))?(?:e(\d+))?$/;
+// export const numberPattern = /^(?!$)(\d*)(?:\.(\d+))?(?:e(\d+))?$/;
 
-function addQuorum(c: ContractBuilder, opts: Required<GovernorOptions>) {
-  if (opts.quorumMode === 'percent') {
-    if (opts.votes !== 'erc20votes') {
-      throw new OptionsError({
-        quorumPercent: 'Percent-based quorum is only available for ERC20Votes',
-      });
-    }
+// function addQuorum(c: ContractBuilder, opts: Required<GovernorOptions>) {
+//   if (opts.quorumMode === 'percent') {
+//     if (opts.votes !== 'erc20votes') {
+//       throw new OptionsError({
+//         quorumPercent: 'Percent-based quorum is only available for ERC20Votes',
+//       });
+//     }
 
-    if (opts.quorumPercent > 100) {
-      throw new OptionsError({
-        quorumPercent: 'Invalid percentage',
-      });
-    }
+//     if (opts.quorumPercent > 100) {
+//       throw new OptionsError({
+//         quorumPercent: 'Invalid percentage',
+//       });
+//     }
 
-    c.addParent({
-      name: 'GovernorVotesQuorumFraction',
-      path: 'openzeppelin/contracts/governance/extensions/GovernorVotesQuorumFraction',
-    }, [opts.quorumPercent]);
-    c.addOverride('GovernorVotesQuorumFraction', functions.quorum);
-  }
+//     c.addParent({
+//       name: 'GovernorVotesQuorumFraction',
+//       path: 'openzeppelin/contracts/governance/extensions/GovernorVotesQuorumFraction',
+//     }, [opts.quorumPercent]);
+//     c.addOverride('GovernorVotesQuorumFraction', functions.quorum);
+//   }
 
-  else if (opts.quorumMode === 'absolute') {
-    if (!numberPattern.test(opts.quorumAbsolute)) {
-      throw new OptionsError({
-        quorumAbsolute: 'Not a valid number',
-      });
-    }
+//   else if (opts.quorumMode === 'absolute') {
+//     if (!numberPattern.test(opts.quorumAbsolute)) {
+//       throw new OptionsError({
+//         quorumAbsolute: 'Not a valid number',
+//       });
+//     }
 
-    c.setFunctionBody([
-      `return ${opts.quorumAbsolute}e${opts.decimals};`,
-    ], functions.quorum, 'pure');
-  }
-}
+//     c.setFunctionBody([
+//       `return ${opts.quorumAbsolute}e${opts.decimals};`,
+//     ], functions.quorum, 'pure');
+//   }
+// }
 
-const timelockModules = {
-  openzeppelin: {
-    timelockType: 'TimelockController',
-    parentName: 'GovernorTimelockControl',
-  },
-  compound: {
-    timelockType: 'ICompoundTimelock',
-    parentName: 'GovernorTimelockCompound',
-  },
-} as const;
+// const timelockModules = {
+//   openzeppelin: {
+//     timelockType: 'TimelockController',
+//     parentName: 'GovernorTimelockControl',
+//   },
+//   compound: {
+//     timelockType: 'ICompoundTimelock',
+//     parentName: 'GovernorTimelockCompound',
+//   },
+// } as const;
 
-function addTimelock(c: ContractBuilder, { timelock }: GovernorOptions) {
-  if (timelock === false) {
-    return;
-  }
+// function addTimelock(c: ContractBuilder, { timelock }: GovernorOptions) {
+//   if (timelock === false) {
+//     return;
+//   }
 
-  const timelockArg = '_timelock';
-  const { timelockType, parentName } = timelockModules[timelock];
+//   const timelockArg = '_timelock';
+//   const { timelockType, parentName } = timelockModules[timelock];
 
-  c.addConstructorArgument({
-    type: timelockType,
-    name: timelockArg,
-  });
+//   c.addConstructorArgument({
+//     type: timelockType,
+//     name: timelockArg,
+//   });
 
-  c.addParent({
-    name: parentName,
-    path: `openzeppelin/contracts/governance/extensions/${parentName}`,
-  }, [{ lit: timelockArg }]);
-  c.addOverride('IGovernor', functions.propose);
-  c.addOverride(parentName, functions._execute);
-  c.addOverride(parentName, functions._cancel);
-  c.addOverride(parentName, functions._executor);
-  c.addOverride(parentName, functions.state);
-  c.addOverride(parentName, supportsInterface);
-}
+//   c.addParent({
+//     name: parentName,
+//     path: `openzeppelin/contracts/governance/extensions/${parentName}`,
+//   }, [{ lit: timelockArg }]);
+//   c.addOverride('IGovernor', functions.propose);
+//   c.addOverride(parentName, functions._execute);
+//   c.addOverride(parentName, functions._cancel);
+//   c.addOverride(parentName, functions._executor);
+//   c.addOverride(parentName, functions.state);
+//   c.addOverride(parentName, supportsInterface);
+// }
 
-function addBravo(c: ContractBuilder, { bravo, timelock }: GovernorOptions) {
-  if (bravo) {
-    if (timelock === false) {
-      throw new OptionsError({
-        timelock: 'GovernorBravo compatibility requires a timelock',
-      });
-    }
+// function addBravo(c: ContractBuilder, { bravo, timelock }: GovernorOptions) {
+//   if (bravo) {
+//     if (timelock === false) {
+//       throw new OptionsError({
+//         timelock: 'GovernorBravo compatibility requires a timelock',
+//       });
+//     }
 
-    c.addParent({
-      name: 'GovernorCompatibilityBravo',
-      path: 'openzeppelin/contracts/governance/compatibility/GovernorCompatibilityBravo',
-    });
-    c.addOverride('IGovernor', functions.state);
-    c.addOverride('GovernorCompatibilityBravo', functions.propose);
-    c.addOverride('IERC165', supportsInterface);
-  }
-}
+//     c.addParent({
+//       name: 'GovernorCompatibilityBravo',
+//       path: 'openzeppelin/contracts/governance/compatibility/GovernorCompatibilityBravo',
+//     });
+//     c.addOverride('IGovernor', functions.state);
+//     c.addOverride('GovernorCompatibilityBravo', functions.propose);
+//     c.addOverride('IERC165', supportsInterface);
+//   }
+// }
 
-const functions = defineFunctions({
-  votingDelay: {
-    args: [],
-    returns: ['uint256'],
-    kind: 'external',
-    mutability: 'pure',
-  },
-  votingPeriod: {
-    args: [],
-    returns: ['uint256'],
-    kind: 'external',
-    mutability: 'pure',
-  },
-  proposalThreshold: {
-    args: [],
-    returns: ['uint256'],
-    kind: 'external',
-    mutability: 'pure',
-  },
-  quorum: {
-    args: [
-      { name: 'blockNumber', type: 'uint256' },
-    ],
-    returns: ['uint256'],
-    kind: 'external',
-    mutability: 'view',
-  },
-  getVotes: {
-    args: [
-      { name: 'account', type: 'address' },
-      { name: 'blockNumber', type: 'uint256' },
-    ],
-    returns: ['uint256'],
-    kind: 'external',
-    mutability: 'view',
-  },
-  propose: {
-    args: [
-      { name: 'targets', type: 'address[] memory' },
-      { name: 'values', type: 'uint256[] memory' },
-      { name: 'calldatas', type: 'bytes[] memory' },
-      { name: 'description', type: 'string memory' },
-    ],
-    returns: ['uint256'],
-    kind: 'external',
-  },
-  _execute: {
-    args: [
-      { name: 'proposalId', type: 'uint256' },
-      { name: 'targets', type: 'address[] memory' },
-      { name: 'values', type: 'uint256[] memory' },
-      { name: 'calldatas', type: 'bytes[] memory' },
-      { name: 'descriptionHash', type: 'bytes32' },
-    ],
-    kind: 'internal',
-  },
-  _cancel: {
-    args: [
-      { name: 'targets', type: 'address[] memory' },
-      { name: 'values', type: 'uint256[] memory' },
-      { name: 'calldatas', type: 'bytes[] memory' },
-      { name: 'descriptionHash', type: 'bytes32' },
-    ],
-    returns: ['uint256'],
-    kind: 'internal',
-  },
-  state: {
-    args: [
-      { name: 'proposalId', type: 'uint256' },
-    ],
-    returns: ['ProposalState'],
-    kind: 'external',
-    mutability: 'view',
-  },
-  _executor: {
-    args: [],
-    returns: ['address'],
-    kind: 'internal',
-    mutability: 'view',
-  },
-});
+// const functions = defineFunctions({
+//   votingDelay: {
+//     args: [],
+//     returns: ['uint256'],
+//     kind: 'external',
+//     mutability: 'pure',
+//   },
+//   votingPeriod: {
+//     args: [],
+//     returns: ['uint256'],
+//     kind: 'external',
+//     mutability: 'pure',
+//   },
+//   proposalThreshold: {
+//     args: [],
+//     returns: ['uint256'],
+//     kind: 'external',
+//     mutability: 'pure',
+//   },
+//   quorum: {
+//     args: [
+//       { name: 'blockNumber', type: 'uint256' },
+//     ],
+//     returns: ['uint256'],
+//     kind: 'external',
+//     mutability: 'view',
+//   },
+//   getVotes: {
+//     args: [
+//       { name: 'account', type: 'address' },
+//       { name: 'blockNumber', type: 'uint256' },
+//     ],
+//     returns: ['uint256'],
+//     kind: 'external',
+//     mutability: 'view',
+//   },
+//   propose: {
+//     args: [
+//       { name: 'targets', type: 'address[] memory' },
+//       { name: 'values', type: 'uint256[] memory' },
+//       { name: 'calldatas', type: 'bytes[] memory' },
+//       { name: 'description', type: 'string memory' },
+//     ],
+//     returns: ['uint256'],
+//     kind: 'external',
+//   },
+//   _execute: {
+//     args: [
+//       { name: 'proposalId', type: 'uint256' },
+//       { name: 'targets', type: 'address[] memory' },
+//       { name: 'values', type: 'uint256[] memory' },
+//       { name: 'calldatas', type: 'bytes[] memory' },
+//       { name: 'descriptionHash', type: 'bytes32' },
+//     ],
+//     kind: 'internal',
+//   },
+//   _cancel: {
+//     args: [
+//       { name: 'targets', type: 'address[] memory' },
+//       { name: 'values', type: 'uint256[] memory' },
+//       { name: 'calldatas', type: 'bytes[] memory' },
+//       { name: 'descriptionHash', type: 'bytes32' },
+//     ],
+//     returns: ['uint256'],
+//     kind: 'internal',
+//   },
+//   state: {
+//     args: [
+//       { name: 'proposalId', type: 'uint256' },
+//     ],
+//     returns: ['ProposalState'],
+//     kind: 'external',
+//     mutability: 'view',
+//   },
+//   _executor: {
+//     args: [],
+//     returns: ['address'],
+//     kind: 'internal',
+//     mutability: 'view',
+//   },
+// });

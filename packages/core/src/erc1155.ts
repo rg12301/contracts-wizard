@@ -1,7 +1,7 @@
 import { Contract, ContractBuilder } from './contract';
-import { Access, setAccessControl } from './set-access-control';
-import { addPausable } from './add-pausable';
-import { supportsInterface } from './common-functions';
+// import { Access, setAccessControl } from './set-access-control';
+// import { addPausable } from './add-pausable';
+// import { supportsInterface } from './common-functions';
 import { defineFunctions } from './utils/define-functions';
 import { CommonOptions, withCommonDefaults } from './common-options';
 import { setUpgradeable } from './set-upgradeable';
@@ -21,24 +21,24 @@ export function buildERC1155(opts: ERC1155Options): Contract {
 
   const { access, upgradeable, info } = withCommonDefaults(opts);
 
-  addBase(c, opts.uri);
-  addSetUri(c, access);
+  // addBase(c, opts.uri);
+  // addSetUri(c, access);
 
-  if (opts.pausable) {
-    addPausable(c, access, [functions._beforeTokenTransfer]);
-  }
+  // if (opts.pausable) {
+  //   addPausable(c, access, [functions._beforeTokenTransfer]);
+  // }
 
-  if (opts.burnable) {
-    addBurnable(c);
-  }
+  // if (opts.burnable) {
+  //   addBurnable(c);
+  // }
 
-  if (opts.mintable) {
-    addMintable(c, access);
-  }
+  // if (opts.mintable) {
+  //   addMintable(c, access);
+  // }
 
-  if (opts.supply) {
-    addSupply(c);
-  }
+  // if (opts.supply) {
+  //   addSupply(c);
+  // }
 
   setUpgradeable(c, upgradeable, access);
 
@@ -47,84 +47,84 @@ export function buildERC1155(opts: ERC1155Options): Contract {
   return c;
 }
 
-function addBase(c: ContractBuilder, uri: string) {
-  c.addParent(
-    {
-      name: 'ERC1155',
-      path: 'openzeppelin/contracts/token/ERC1155/ERC1155',
-    },
-    [uri],
-  );
+// function addBase(c: ContractBuilder, uri: string) {
+//   c.addParent(
+//     {
+//       name: 'ERC1155',
+//       path: 'openzeppelin/contracts/token/ERC1155/ERC1155',
+//     },
+//     [uri],
+//   );
 
-  c.addOverride('ERC1155', functions._beforeTokenTransfer);
-  c.addOverride('ERC1155', supportsInterface);
-}
+//   c.addOverride('ERC1155', functions._beforeTokenTransfer);
+//   c.addOverride('ERC1155', supportsInterface);
+// }
 
-function addBurnable(c: ContractBuilder) {
-  c.addParent({
-    name: 'ERC1155Burnable',
-    path: 'openzeppelin/contracts/token/ERC1155/extensions/ERC1155Burnable',
-  });
-}
+// function addBurnable(c: ContractBuilder) {
+//   c.addParent({
+//     name: 'ERC1155Burnable',
+//     path: 'openzeppelin/contracts/token/ERC1155/extensions/ERC1155Burnable',
+//   });
+// }
 
-function addMintable(c: ContractBuilder, access: Access) {
-  setAccessControl(c, functions.mint, access, 'MINTER');
-  setAccessControl(c, functions.mintBatch, access, 'MINTER');
-  c.addFunctionCode('_mint(account, id, amount, data);', functions.mint);
-  c.addFunctionCode('_mintBatch(to, ids, amounts, data);', functions.mintBatch);
-}
+// function addMintable(c: ContractBuilder, access: Access) {
+//   setAccessControl(c, functions.mint, access, 'MINTER');
+//   setAccessControl(c, functions.mintBatch, access, 'MINTER');
+//   c.addFunctionCode('_mint(account, id, amount, data);', functions.mint);
+//   c.addFunctionCode('_mintBatch(to, ids, amounts, data);', functions.mintBatch);
+// }
 
-function addSetUri(c: ContractBuilder, access: Access) {
-  setAccessControl(c, functions.setURI, access, 'URI_SETTER');
-  c.addFunctionCode('_setURI(newuri);', functions.setURI);
-}
+// function addSetUri(c: ContractBuilder, access: Access) {
+//   setAccessControl(c, functions.setURI, access, 'URI_SETTER');
+//   c.addFunctionCode('_setURI(newuri);', functions.setURI);
+// }
 
-function addSupply(c: ContractBuilder) {
-  c.addParent({
-    name: 'ERC1155Supply',
-    path: 'openzeppelin/contracts/token/ERC1155/extensions/ERC1155Supply',
-  });
-  c.addOverride('ERC1155Supply', functions._beforeTokenTransfer);
-}
+// function addSupply(c: ContractBuilder) {
+//   c.addParent({
+//     name: 'ERC1155Supply',
+//     path: 'openzeppelin/contracts/token/ERC1155/extensions/ERC1155Supply',
+//   });
+//   c.addOverride('ERC1155Supply', functions._beforeTokenTransfer);
+// }
 
-const functions = defineFunctions({
-  _beforeTokenTransfer: {
-    kind: 'internal' as const,
-    args: [
-      { name: 'operator', type: 'address' },
-      { name: 'from', type: 'address' },
-      { name: 'to', type: 'address' },
-      { name: 'ids', type: 'uint256[] memory' },
-      { name: 'amounts', type: 'uint256[] memory' },
-      { name: 'data', type: 'bytes memory' },
-    ],
-  },
+// const functions = defineFunctions({
+//   _beforeTokenTransfer: {
+//     kind: 'internal' as const,
+//     args: [
+//       { name: 'operator', type: 'address' },
+//       { name: 'from', type: 'address' },
+//       { name: 'to', type: 'address' },
+//       { name: 'ids', type: 'uint256[] memory' },
+//       { name: 'amounts', type: 'uint256[] memory' },
+//       { name: 'data', type: 'bytes memory' },
+//     ],
+//   },
 
-  setURI: {
-    kind: 'external' as const,
-    args: [
-      { name: 'newuri', type: 'string memory' },
-    ],
-  },
+//   setURI: {
+//     kind: 'external' as const,
+//     args: [
+//       { name: 'newuri', type: 'string memory' },
+//     ],
+//   },
 
-  mint: {
-    kind: 'external' as const,
-    args: [
-      { name: 'account', type: 'address' },
-      { name: 'id', type: 'uint256' },
-      { name: 'amount', type: 'uint256' },
-      { name: 'data', type: 'bytes memory' },
-    ],
-  },
+//   mint: {
+//     kind: 'external' as const,
+//     args: [
+//       { name: 'account', type: 'address' },
+//       { name: 'id', type: 'uint256' },
+//       { name: 'amount', type: 'uint256' },
+//       { name: 'data', type: 'bytes memory' },
+//     ],
+//   },
 
-  mintBatch: {
-    kind: 'external' as const,
-    args: [
-      { name: 'to', type: 'address' },
-      { name: 'ids', type: 'uint256[] memory' },
-      { name: 'amounts', type: 'uint256[] memory' },
-      { name: 'data', type: 'bytes memory' },
-    ],
-  },
+//   mintBatch: {
+//     kind: 'external' as const,
+//     args: [
+//       { name: 'to', type: 'address' },
+//       { name: 'ids', type: 'uint256[] memory' },
+//       { name: 'amounts', type: 'uint256[] memory' },
+//       { name: 'data', type: 'bytes memory' },
+//     ],
+//   },
 
-});
+// });

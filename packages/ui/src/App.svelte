@@ -65,35 +65,35 @@
       }
     };
 
-    const remixHandler = async (e: MouseEvent) => {
-      e.preventDefault();
-      if ((e.target as Element)?.classList.contains('disabled')) return;
-      const versionedCode = printContractVersioned(contract);
-      window.open(remixURL(versionedCode).toString(), '_blank');
-      if (opts) {
-        await postConfig(opts, 'remix');
-      }
-    };
+    // const remixHandler = async (e: MouseEvent) => {
+    //   e.preventDefault();
+    //   if ((e.target as Element)?.classList.contains('disabled')) return;
+    //   const versionedCode = printContractVersioned(contract);
+    //   window.open(remixURL(versionedCode).toString(), '_blank');
+    //   if (opts) {
+    //     await postConfig(opts, 'remix');
+    //   }
+    // };
 
-    const downloadNpmHandler = async () => {
-      const blob = new Blob([code], { type: 'text/plain' });
-      if (opts) {
-        saveAs(blob, opts.name + '.sol');
-        await postConfig(opts, 'download-npm');
-      }
-    };
+    // const downloadNpmHandler = async () => {
+    //   const blob = new Blob([code], { type: 'text/plain' });
+    //   if (opts) {
+    //     saveAs(blob, opts.name + '.sol');
+    //     await postConfig(opts, 'download-npm');
+    //   }
+    // };
 
-    const zipModule = import('@openzeppelin/wizard/zip');
+    // const zipModule = import('@openzeppelin/wizard/zip');
 
-    const downloadVendoredHandler = async () => {
-      const { zipContract } = await zipModule;
-      const zip = zipContract(contract);
-      const blob = await zip.generateAsync({ type: 'blob' });
-      saveAs(blob, 'contracts.zip');
-      if (opts) {
-        await postConfig(opts, 'download-vendored');
-      }
-    };
+    // const downloadVendoredHandler = async () => {
+    //   const { zipContract } = await zipModule;
+    //   const zip = zipContract(contract);
+    //   const blob = await zip.generateAsync({ type: 'blob' });
+    //   saveAs(blob, 'contracts.zip');
+    //   if (opts) {
+    //     await postConfig(opts, 'download-vendored');
+    //   }
+    // };
 </script>
 
 <div class="container flex flex-col gap-4 p-4">
@@ -121,7 +121,7 @@
         Copy to Clipboard
       </button>
 
-      <Tooltip let:trigger disabled={!opts?.upgradeable} theme="light-red border" interactive hideOnClick={false}>
+      <!-- <Tooltip let:trigger disabled={!opts?.upgradeable} theme="light-red border" interactive hideOnClick={false}>
         <button use:trigger class="action-button" class:disabled={opts?.upgradeable} on:click={remixHandler}>
           <RemixIcon />
           Open in Remix
@@ -129,11 +129,11 @@
         <div slot="content">
           Upgradeable contracts are not supported on Remix.
           Use Hardhat or Truffle with <a href="https://docs.openzeppelin.com/upgrades-plugins/" target="_blank">OpenZeppelin Upgrades</a>.
-          <br>
+          <br> -->
           <!-- svelte-ignore a11y-invalid-attribute -->
-          <a href="#" on:click={remixHandler}>Open in Remix anyway</a>.
+          <!-- <a href="#" on:click={remixHandler}>Open in Remix anyway</a>.
         </div>
-      </Tooltip>
+      </Tooltip> -->
 
       <Dropdown let:active>
         <button class="action-button" class:active slot="button">
@@ -141,7 +141,7 @@
           Download
         </button>
 
-        <button class="download-option" on:click={downloadNpmHandler}>
+        <!-- <button class="download-option" on:click={downloadNpmHandler}>
           <FileIcon />
           <div class="download-option-content">
             <p>Single file</p>
@@ -157,7 +157,7 @@
             <p>Does not require npm package.</p>
             <p>Must be updated manually.</p>
           </div>
-        </button>
+        </button> -->
       </Dropdown>
     </div>
   </div>

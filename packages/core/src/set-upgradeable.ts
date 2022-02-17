@@ -27,7 +27,7 @@ export function setUpgradeable(c: ContractBuilder, upgradeable: Upgradeable, acc
         name: 'UUPSUpgradeable',
         path: 'openzeppelin/contracts/proxy/utils/UUPSUpgradeable',
       });
-      c.addOverride('UUPSUpgradeable', functions._authorizeUpgrade);
+      // c.addOverride('UUPSUpgradeable', functions._authorizeUpgrade);
       c.setFunctionBody([], functions._authorizeUpgrade);
       break;
     }
@@ -44,6 +44,6 @@ const functions = defineFunctions({
     args: [
       { name: 'newImplementation', type: 'address' },
     ],
-    kind: 'internal',
+    // kind: 'internal',
   },
 });

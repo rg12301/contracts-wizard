@@ -6,8 +6,6 @@ import { Options, Helpers, withHelpers } from './options';
 import { formatLines, spaceBetween, Lines } from './utils/format-lines';
 import { mapValues } from './utils/map-values';
 
-const IMPLICIT_ARGS = ['syscall_ptr : felt*,', 'pedersen_ptr : HashBuiltin*,', 'range_check_ptr'];
-
 export function printContract(contract: Contract, opts?: Options): string {
   const helpers = withHelpers(contract, opts);
 
@@ -74,15 +72,17 @@ function printConstructor(contract: Contract, helpers: Helpers): Lines[] {
       .filter(hasInitializer)
       .flatMap(p => printParentConstructor(p, helpers));
     const modifiers = ['constructor'];
-    const args = contract.constructorArgs.map(a =>  printArgument(a, helpers));
+    const args = contract.constructorArgs.map(a => printArgument(a, helpers));
+    const implicitArgs = contract.constructorImplicitArgs?.map(a => printArgument(a, helpers));
     const body = spaceBetween(
         parents.map(p => p + ';'),
         contract.constructorCode,
       );
     const head = 'func constructor';
+
     const constructor = printFunction2(
       head,
-      IMPLICIT_ARGS,
+      implicitArgs ?? [],
       args,
       modifiers,
       undefined,
@@ -160,21 +160,21 @@ export function printValue(value: Value): string {
 function printFunction(fn: ContractFunction, helpers: Helpers): Lines[] {
   const { transformName } = helpers;
 
-  if (fn.override.size <= 1 && fn.modifiers.length === 0 && fn.code.length === 0 && !fn.final) {
-    return []
-  }
+  // if (fn.override.size <= 1 && fn.modifiers.length === 0 && fn.code.length === 0 && !fn.final) {
+  //   return []
+  // }
 
-  const modifiers: string[] = [fn.kind, ...fn.modifiers];
+  // const modifiers: string[] = [fn.kind, ...fn.modifiers];
 
-  if (fn.mutability !== 'nonpayable') {
-    modifiers.splice(1, 0, fn.mutability);
-  }
+  // if (fn.mutability !== 'nonpayable') {
+  //   modifiers.splice(1, 0, fn.mutability);
+  // }
 
-  if (fn.override.size === 1) {
-    modifiers.push(`override`);
-  } else if (fn.override.size > 1) {
-    modifiers.push(`override(${[...fn.override].map(transformName).join(', ')})`);
-  }
+  // if (fn.override.size === 1) {
+  //   modifiers.push(`override`);
+  // } else if (fn.override.size > 1) {
+  //   modifiers.push(`override(${[...fn.override].map(transformName).join(', ')})`);
+  // }
 
   // if (fn.returns?.length) {
   //   modifiers.push(`returns (${fn.returns.join(', ')})`);
@@ -182,31 +182,36 @@ function printFunction(fn: ContractFunction, helpers: Helpers): Lines[] {
 
   const code = [...fn.code];
 
-  if (fn.override.size > 0 && !fn.final) {
-    const superCall = `super.${fn.name}(${fn.args.map(a => a.name).join(', ')});`;
-    code.push(fn.returns?.length ? 'return ' + superCall : superCall);
-  }
+  // if (fn.override.size > 0 && !fn.final) {
+  //   const superCall = `super.${fn.name}(${fn.args.map(a => a.name).join(', ')});`;
+  //   code.push(fn.returns?.length ? 'return ' + superCall : superCall);
+  // }
 
-  if (modifiers.length + fn.code.length > 1) {
+  const superCall = `${fn.module}_${fn.name}(${fn.args.map(a => a.name).join(', ')});`;
+  code.push(fn.returns?.length ? 'return ' + superCall : superCall);
+
+
+  //if (modifiers.length + fn.code.length > 1) {
     return printFunction2(
       'func ' + fn.name,
-      IMPLICIT_ARGS, // TODO define implicit args as objects and format them
+      fn.implicitArgs?.map(a => printArgument(a, helpers)) ?? [],
       fn.args.map(a => printArgument(a, helpers)),
-      modifiers,
+      [fn.kind ?? "kindNotFound"],
       fn.returns?.map(a => typeof a === 'string' ? a : printArgument(a, helpers)),
       code,
     );
-  } else {
-    return [];
-  }
+  // } else {
+  //   return [];
+  // }
 }
 
 // generic for functions and constructors
 // kindedName = 'function foo' or 'constructor'
-function printFunction2(kindedName: string, implicitArgs: string[], args: string[], modifiers: string[], returns: string[] | undefined, code: Lines[]): Lines[] {
+function printFunction2(kindedName: string, implicitArgs: string[], args: string[], kind: string[], returns: string[] | undefined, code: Lines[]): Lines[] {
   const fn = [];
 
-  modifiers.forEach(modifier => fn.push(`@${modifier}`));
+  //modifiers.forEach(modifier => fn.push(`@${modifier}`));
+  fn.push(`@${kind}`);
   fn.push(`${kindedName}{`);
 
   fn.push([implicitArgs]);
@@ -238,8 +243,12 @@ function printFunction2(kindedName: string, implicitArgs: string[], args: string
 }
 
 function printArgument(arg: FunctionArgument, { transformName }: Helpers): string {
-  const type = /^[A-Z]/.test(arg.type) ? transformName(arg.type) : arg.type;
-  return `${arg.name}: ${type}`;//[type, arg.name].join(' ');
+  if (arg.type !== undefined) {
+    const type = /^[A-Z]/.test(arg.type) ? transformName(arg.type) : arg.type;
+    return `${arg.name}: ${type}`;//[type, arg.name].join(' ');  
+  } else {
+    return `${arg.name}`;
+  }
 }
 
 function printNatspecTags(tags: NatspecTag[]): string[] {

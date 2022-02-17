@@ -1,11 +1,13 @@
-import type { BaseFunction } from './contract';
+// import type { BaseFunction } from './contract';
 
-export const supportsInterface: BaseFunction = {
-  name: 'supportsInterface',
-  kind: 'external',
-  args: [
-    { name: 'interfaceId', type: 'bytes4' },
-  ],
-  returns: ['bool'],
-  mutability: 'view',
-};
+export {};
+
+// export const supportsInterface: BaseFunction = {
+//   name: 'supportsInterface',
+//   kind: 'external',
+//   args: [
+//     { name: 'interfaceId', type: 'bytes4' },
+//   ],
+//   returns: ['bool'],
+//   mutability: 'view',
+// };

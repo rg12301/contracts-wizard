@@ -2,7 +2,7 @@
   import HelpTooltip from './HelpTooltip.svelte';
 
   import type { KindedOptions } from '@openzeppelin/wizard';
-  import { premintPattern, infoDefaults } from '@openzeppelin/wizard';
+  import { infoDefaults } from '@openzeppelin/wizard';
 
   import AccessControlSection from './AccessControlSection.svelte';
   import UpgradeabilitySection from './UpgradeabilitySection.svelte';
@@ -41,13 +41,13 @@
       </label>
     </div>
 
-    <label class="labeled-input">
+    <!-- <label class="labeled-input">
       <span class="flex justify-between pr-2">
         Premint
         <HelpTooltip>Create an initial amount of tokens for the deployer.</HelpTooltip>
       </span>
       <input bind:value={opts.premint} placeholder="0" pattern={premintPattern.source}>
-    </label>
+    </label> -->
 </section>
 
 <section class="controls-section">

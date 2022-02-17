@@ -1,5 +1,5 @@
 import type { ContractBuilder, BaseFunction } from './contract';
-import { supportsInterface } from './common-functions';
+// import { supportsInterface } from './common-functions';
 
 export const accessOptions = ['ownable', 'roles'] as const;
 
@@ -17,7 +17,7 @@ export function setAccessControl(c: ContractBuilder, fn: BaseFunction, access: A
       if (c.addParent(parents.AccessControl)) {
         c.addConstructorCode('_grantRole(DEFAULT_ADMIN_ROLE, msg.sender);');
       }
-      c.addOverride(parents.AccessControl.name, supportsInterface);
+      // c.addOverride(parents.AccessControl.name, supportsInterface);
       if (c.addVariable(`bytes32 public constant ${roleId} = keccak256("${roleId}");`)) {
         c.addConstructorCode(`_grantRole(${roleId}, msg.sender);`);
       }

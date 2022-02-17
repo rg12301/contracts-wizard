@@ -1,17 +1,19 @@
+import { withImplicitArgs } from './common-options';
 import { toIdentifier } from './utils/to-identifier';
 
 export interface Contract {
   name: string;
   license: string;
-  parents: Parent[];
-  using: Using[];
+  parents: Parent[]; //
+  using: Using[]; //
   natspecTags: NatspecTag[];
-  imports: string[];
+  imports: string[]; //
   functions: ContractFunction[];
   constructorCode: string[];
+  constructorImplicitArgs?: FunctionArgument[];
   constructorArgs: FunctionArgument[];
   variables: string[];
-  upgradeable: boolean;
+  upgradeable: boolean; 
 }
 
 export type Value = string | number | { lit: string } | { note: string, value: Value };
@@ -31,39 +33,26 @@ export interface Using {
   usingFor: string;
 }
 
-export type ReturnArgument = string | FunctionArgument; // TODO cleanup
-
 export interface BaseFunction {
+  module?: string;
   name: string;
+  implicitArgs?: FunctionArgument[];
   args: FunctionArgument[];
-  returns?: ReturnArgument[];
-  kind: FunctionKind;
-  mutability?: FunctionMutability;
+  returns?: FunctionArgument[];
+  kind?: FunctionKind;
 }
 
 export interface ContractFunction extends BaseFunction {
-  override: Set<string>;
   modifiers: string[];
   code: string[];
-  mutability: FunctionMutability;
   final: boolean;
 }
 
-export type FunctionKind = 'internal' | 'external';
-export type FunctionMutability = typeof mutabilityRank[number];
-
-// Order is important
-const mutabilityRank = ['pure', 'view', 'nonpayable', 'payable'] as const;
-
-function maxMutability(a: FunctionMutability, b: FunctionMutability): FunctionMutability {
-  return mutabilityRank[
-    Math.max(mutabilityRank.indexOf(a), mutabilityRank.indexOf(b))
-  ]!;
-}
+export type FunctionKind = 'view' | 'external';
 
 export interface FunctionArgument {
-  type: string;
   name: string;
+  type?: string;
 }
 
 export interface NatspecTag {
@@ -85,9 +74,11 @@ export class ContractBuilder implements Contract {
 
   private parentMap: Map<string, Parent> = new Map<string, Parent>();
   private functionMap: Map<string, ContractFunction> = new Map();
+  constructorImplicitArgs: FunctionArgument[];
 
   constructor(name: string) {
     this.name = toIdentifier(name, true);
+    this.constructorImplicitArgs = withImplicitArgs();
   }
 
   get parents(): Parent[] {
@@ -127,14 +118,6 @@ export class ContractBuilder implements Contract {
     this.using.push({ library, usingFor });
   }
 
-  addOverride(parent: string, baseFn: BaseFunction, mutability?: FunctionMutability) {
-    const fn = this.addFunction(baseFn);
-    fn.override.add(parent);
-    if (mutability) {
-      fn.mutability = maxMutability(fn.mutability, mutability);
-    }
-  }
-
   addModifier(modifier: string, baseFn: BaseFunction) {
     const fn = this.addFunction(baseFn);
     fn.modifiers.push(modifier);
@@ -152,10 +135,8 @@ export class ContractBuilder implements Contract {
       return got;
     } else {
       const fn: ContractFunction = {
-        override: new Set<string>(),
         modifiers: [],
         code: [],
-        mutability: 'nonpayable',
         final: false,
         ...baseFn,
       };
@@ -172,27 +153,27 @@ export class ContractBuilder implements Contract {
     this.constructorCode.push(code);
   }
 
-  addFunctionCode(code: string, baseFn: BaseFunction, mutability?: FunctionMutability) {
+  addFunctionCode(code: string, baseFn: BaseFunction) {//}, mutability?: FunctionMutability) {
     const fn = this.addFunction(baseFn);
     if (fn.final) {
       throw new Error(`Function ${baseFn.name} is already finalized`);
     }
     fn.code.push(code);
-    if (mutability) {
-      fn.mutability = maxMutability(fn.mutability, mutability);
-    }
+    // if (mutability) {
+    //  fn.mutability = maxMutability(fn.mutability, mutability);
+    // }
   }
 
-  setFunctionBody(code: string[], baseFn: BaseFunction, mutability?: FunctionMutability) {
+  setFunctionBody(code: string[], baseFn: BaseFunction) {//}, mutability?: FunctionMutability) {
     const fn = this.addFunction(baseFn);
     if (fn.code.length > 0) {
       throw new Error(`Function ${baseFn.name} has additional code`);
     }
     fn.code.push(...code);
     fn.final = true;
-    if (mutability) {
-      fn.mutability = mutability;
-    }
+    // if (mutability) {
+    //   fn.mutability = mutability;
+    // }
   }
 
   addVariable(code: string): boolean {

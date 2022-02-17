@@ -86,6 +86,7 @@ function printConstructor(contract: Contract, helpers: Helpers): Lines[] {
       args,
       modifiers,
       undefined,
+      undefined,
       body,
     );
     if (!helpers.upgradeable) {
@@ -198,6 +199,7 @@ function printFunction(fn: ContractFunction, helpers: Helpers): Lines[] {
       fn.args.map(a => printArgument(a, helpers)),
       [fn.kind ?? "kindNotFound"],
       fn.returns?.map(a => typeof a === 'string' ? a : printArgument(a, helpers)),
+      fn.returns?.map(a => typeof a === 'string' ? a : a.name),
       code,
     );
   // } else {
@@ -207,7 +209,7 @@ function printFunction(fn: ContractFunction, helpers: Helpers): Lines[] {
 
 // generic for functions and constructors
 // kindedName = 'function foo' or 'constructor'
-function printFunction2(kindedName: string, implicitArgs: string[], args: string[], kind: string[], returns: string[] | undefined, code: Lines[]): Lines[] {
+function printFunction2(kindedName: string, implicitArgs: string[], args: string[], kind: string[], returns: string[] | undefined, returnVariables: string[] | undefined, code: Lines[]): Lines[] {
   const fn = [];
 
   //modifiers.forEach(modifier => fn.push(`@${modifier}`));
@@ -237,7 +239,16 @@ function printFunction2(kindedName: string, implicitArgs: string[], args: string
 
 //  fn.push(`(${args.join(', ')})`, modifiers, ':');
 
-  fn.push(code, 'end');
+  fn.push(code);
+
+  if (returnVariables !== undefined) {
+    const formattedReturnVars = returnVariables?.join(', ');
+    fn.push([`return (${formattedReturnVars})`]);
+  } else {
+    fn.push(['return ()']);
+  }
+
+  fn.push('end');
 
   return fn;
 }

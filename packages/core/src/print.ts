@@ -219,7 +219,15 @@ function printFunction2(kindedName: string, implicitArgs: string[], args: string
   fn.push(`@${kind}`);
   fn.push(`${kindedName}{`);
 
-  fn.push([implicitArgs]);
+  //fn.push([implicitArgs]);
+  implicitArgs.forEach((implicitArg, index, arr) => 
+  {
+    if (index < arr.length - 1) {
+      fn.push(`${implicitArg},`);
+    } else {
+      fn.push(`${implicitArg}`);
+    }
+  });
   
   const formattedArgs = args.join(', ');
   const formattedReturns = returns?.join(', ');

@@ -34,6 +34,12 @@ export function buildERC20(opts: ERC20Options): Contract {
   c.addFunction(functions.increaseAllowance);
   c.addFunction(functions.decreaseAllowance);
 
+  c.addFunctionCode(`# Cairo equivalent to 'return (true)'`, functions.transfer);
+  c.addFunctionCode(`# Cairo equivalent to 'return (true)'`, functions.transferFrom);
+  c.addFunctionCode(`# Cairo equivalent to 'return (true)'`, functions.approve);
+  c.addFunctionCode(`# Cairo equivalent to 'return (true)'`, functions.increaseAllowance);
+  c.addFunctionCode(`# Cairo equivalent to 'return (true)'`, functions.decreaseAllowance);
+
   // if (opts.burnable) {
   //   addBurnable(c);
   // }

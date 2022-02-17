@@ -181,7 +181,7 @@ function printFunction(fn: ContractFunction, helpers: Helpers): Lines[] {
   //   modifiers.push(`returns (${fn.returns.join(', ')})`);
   // }
 
-  const code = [...fn.code];
+  const code = [];
 
   // if (fn.override.size > 0 && !fn.final) {
   //   const superCall = `super.${fn.name}(${fn.args.map(a => a.name).join(', ')});`;
@@ -189,7 +189,9 @@ function printFunction(fn: ContractFunction, helpers: Helpers): Lines[] {
   // }
 
   const superCall = `${fn.module}_${fn.name}(${fn.args.map(a => a.name).join(', ')})`;
-  code.push(fn.returns?.length ? 'return ' + superCall : superCall);
+  code.push(superCall);
+
+  code.push(...fn.code);
 
   const returnVariables = fn.returnValue ? [fn.returnValue] : fn.returns?.map(a => typeof a === 'string' ? a : a.name);
 

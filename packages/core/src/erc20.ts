@@ -28,6 +28,12 @@ export function buildERC20(opts: ERC20Options): Contract {
 
   addBase(c, opts.name, opts.symbol);
 
+  c.addFunction(functions.transfer);
+  c.addFunction(functions.transferFrom);
+  c.addFunction(functions.approve);
+  c.addFunction(functions.increaseAllowance);
+  c.addFunction(functions.decreaseAllowance);
+
   // if (opts.burnable) {
   //   addBurnable(c);
   // }
@@ -147,6 +153,67 @@ function addMintable(c: ContractBuilder, access: Access) {
 // }
 
 const functions = defineFunctions({
+  transfer: {
+    module: 'ERC20',
+    kind: 'external' as const,
+    implicitArgs: withImplicitArgs(),
+    args: [
+      { name: 'recipient', type: 'felt' },
+      { name: 'amount', type: 'Uint256' },
+    ],
+    returns: [{ name: 'success', type: 'felt' }],
+    returnValue: 'TRUE',
+  },
+
+  transferFrom: {
+    module: 'ERC20',
+    kind: 'external' as const,
+    implicitArgs: withImplicitArgs(),
+    args: [
+      { name: 'sender', type: 'felt' },
+      { name: 'recipient', type: 'felt' },
+      { name: 'amount', type: 'Uint256' },
+    ],
+    returns: [{ name: 'success', type: 'felt' }],
+    returnValue: 'TRUE',
+  },
+
+  approve: {
+    module: 'ERC20',
+    kind: 'external' as const,
+    implicitArgs: withImplicitArgs(),
+    args: [
+      { name: 'spender', type: 'felt' },
+      { name: 'amount', type: 'Uint256' },
+    ],
+    returns: [{ name: 'success', type: 'felt' }],
+    returnValue: 'TRUE',
+  },
+
+  increaseAllowance: {
+    module: 'ERC20',
+    kind: 'external' as const,
+    implicitArgs: withImplicitArgs(),
+    args: [
+      { name: 'spender', type: 'felt' },
+      { name: 'added_value', type: 'Uint256' },
+    ],
+    returns: [{ name: 'success', type: 'felt' }],
+    returnValue: 'TRUE',
+  },
+
+  decreaseAllowance: {
+    module: 'ERC20',
+    kind: 'external' as const,
+    implicitArgs: withImplicitArgs(),
+    args: [
+      { name: 'spender', type: 'felt' },
+      { name: 'subtracted_value', type: 'Uint256' },
+    ],
+    returns: [{ name: 'success', type: 'felt' }],
+    returnValue: 'TRUE',
+  },
+
   mint: {
     module: 'ERC20',
     kind: 'external' as const,
@@ -157,17 +224,7 @@ const functions = defineFunctions({
     ],
   },
 
-  approve: {
-    module: 'ERC20',
-    kind: 'external' as const,
-    implicitArgs: withImplicitArgs(),
-    returns: [{ name: 'success', type: 'felt' }],
-    returnValue: 'TRUE',
-    args: [
-      { name: 'spender', type: 'felt' },
-      { name: 'amount', type: 'Uint256' },
-    ],
-  },
+
 
   // pause: {
   //   kind: 'external' as const,

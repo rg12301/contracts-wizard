@@ -128,7 +128,7 @@ export class ContractBuilder implements Contract {
     this.natspecTags.push({ key, value });
   }
 
-  private addFunction(baseFn: BaseFunction): ContractFunction {
+  addFunction(baseFn: BaseFunction): ContractFunction {
     const signature = [baseFn.name, '(', ...baseFn.args.map(a => a.name), ')'].join('');
     const got = this.functionMap.get(signature);
     if (got !== undefined) {

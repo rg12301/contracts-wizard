@@ -75,7 +75,7 @@ function printConstructor(contract: Contract, helpers: Helpers): Lines[] {
     const args = contract.constructorArgs.map(a => printArgument(a, helpers));
     const implicitArgs = contract.constructorImplicitArgs?.map(a => printArgument(a, helpers));
     const body = spaceBetween(
-        parents.map(p => p + ';'),
+        parents,
         contract.constructorCode,
       );
     const head = 'func constructor';
@@ -154,7 +154,7 @@ export function printValue(value: Value): string {
       throw new Error(`Number not representable (${value})`);
     }
   } else {
-    return JSON.stringify(value);
+    return `'${value}'`; //JSON.stringify(value);
   }
 }
 
@@ -220,14 +220,18 @@ function printFunction2(kindedName: string, implicitArgs: string[], args: string
   fn.push(`${kindedName}{`);
 
   //fn.push([implicitArgs]);
+  
+  // TODO move this formatting out to printFunction()
+  const implicitArgsFormatted: string[] = [];
   implicitArgs.forEach((implicitArg, index, arr) => 
   {
     if (index < arr.length - 1) {
-      fn.push(`${implicitArg},`);
+      implicitArgsFormatted.push(`${implicitArg},`);
     } else {
-      fn.push(`${implicitArg}`);
+      implicitArgsFormatted.push(`${implicitArg}`);
     }
   });
+  fn.push([implicitArgsFormatted]);
   
   const formattedArgs = args.join(', ');
   const formattedReturns = returns?.join(', ');

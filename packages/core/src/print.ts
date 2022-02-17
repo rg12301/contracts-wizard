@@ -73,15 +73,13 @@ function printConstructor(contract: Contract, helpers: Helpers): Lines[] {
     const parents = contract.parents
       .filter(hasInitializer)
       .flatMap(p => printParentConstructor(p, helpers));
-    const modifiers = helpers.upgradeable ? ['initializer public'] : parents;
+    const modifiers = ['constructor'];
     const args = contract.constructorArgs.map(a =>  printArgument(a, helpers));
-    const body = helpers.upgradeable
-      ? spaceBetween(
+    const body = spaceBetween(
         parents.map(p => p + ';'),
         contract.constructorCode,
-      )
-      : contract.constructorCode;
-    const head = helpers.upgradeable ? 'function initialize' : 'func constructor';
+      );
+    const head = 'func constructor';
     const constructor = printFunction2(
       head,
       IMPLICIT_ARGS,
@@ -133,14 +131,10 @@ function sortedFunctions(contract: Contract): SortedFunctions {
 }
 
 function printParentConstructor({ contract, params }: Parent, helpers: Helpers): [] | [string] {
-  const fn = helpers.upgradeable ? `__${contract.name}_init` : contract.name;
-  if (helpers.upgradeable || params.length > 0) {
-    return [
-      fn + '(' + params.map(printValue).join(', ') + ')',
-    ];
-  } else {
-    return [];
-  }
+  const fn = `${contract.name}_initializer`;
+  return [
+    fn + '(' + params.map(printValue).join(', ') + ')',
+  ];
 }
 
 export function printValue(value: Value): string {

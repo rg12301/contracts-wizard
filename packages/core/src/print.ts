@@ -35,7 +35,7 @@ export function printContract(contract: Contract, opts?: Options): string {
         //[`contract ${contract.name}`, ...printInheritance(contract, helpers), '{'].join(' '),
 
         spaceBetween(
-          printUsingFor(contract, helpers),
+          //printUsingFor(contract, helpers),
           contract.variables.map(helpers.transformVariable),
           printConstructor(contract, helpers),
           ...fns.code,
@@ -188,7 +188,7 @@ function printFunction(fn: ContractFunction, helpers: Helpers): Lines[] {
   //   code.push(fn.returns?.length ? 'return ' + superCall : superCall);
   // }
 
-  const superCall = `${fn.module}_${fn.name}(${fn.args.map(a => a.name).join(', ')});`;
+  const superCall = `${fn.module}_${fn.name}(${fn.args.map(a => a.name).join(', ')})`;
   code.push(fn.returns?.length ? 'return ' + superCall : superCall);
 
 

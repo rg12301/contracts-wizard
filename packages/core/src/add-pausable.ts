@@ -1,34 +1,44 @@
-// import type { ContractBuilder, BaseFunction } from './contract';
-// import { Access, setAccessControl } from './set-access-control';
-// import { defineFunctions } from './utils/define-functions';
+import { withImplicitArgs } from './common-options';
+import type { ContractBuilder, BaseFunction } from './contract';
+import { Access, setAccessControl } from './set-access-control';
+import { defineFunctions } from './utils/define-functions';
 
-export {};
+export function addPausable(c: ContractBuilder, access: Access, pausableFns: BaseFunction[]) {
+  c.addParent({
+    name: 'Pausable',
+    path: 'contracts/security/Pausable_base',
+  });
 
-// export function addPausable(c: ContractBuilder, access: Access, pausableFns: BaseFunction[]) {
-//   c.addParent({
-//     name: 'Pausable',
-//     path: 'openzeppelin/contracts/security/Pausable',
-//   });
+  for (const fn of pausableFns) {
+    c.addModifier('when_not_paused', fn);
+  }
 
-//   for (const fn of pausableFns) {
-//     c.addModifier('whenNotPaused', fn);
-//   }
+  setAccessControl(c, functions.pause, access, 'PAUSER');
 
-//   setAccessControl(c, functions.pause, access, 'PAUSER');
-//   c.addFunctionCode('_pause();', functions.pause);
+  setAccessControl(c, functions.unpause, access, 'PAUSER');
+}
 
-//   setAccessControl(c, functions.unpause, access, 'PAUSER');
-//   c.addFunctionCode('_unpause();', functions.unpause);
-// }
+const functions = defineFunctions({
+  pause: {
+    module: 'Pausable',
+    kind: 'external' as const,
+    implicitArgs: withImplicitArgs(),
+    args: [],
+  },
 
-// const functions = defineFunctions({
-//   pause: {
-//     kind: 'external' as const,
-//     args: [],
-//   },
+  unpause: {
+    module: 'Pausable',
+    kind: 'external' as const,
+    implicitArgs: withImplicitArgs(),
+    args: [],
+  },
+  // pause: {
+  //   kind: 'external' as const,
+  //   args: [],
+  // },
 
-//   unpause: {
-//     kind: 'external' as const,
-//     args: [],
-//   },
-// });
+  // unpause: {
+  //   kind: 'external' as const,
+  //   args: [],
+  // },
+});

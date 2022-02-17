@@ -1,6 +1,6 @@
 import { Contract, ContractBuilder } from './contract';
 import { Access, setAccessControl } from './set-access-control';
-// import { addPausable } from './add-pausable';
+import { addPausable } from './add-pausable';
 import { defineFunctions } from './utils/define-functions';
 import { CommonOptions, withCommonDefaults, withImplicitArgs } from './common-options';
 import { setUpgradeable } from './set-upgradeable';
@@ -36,9 +36,9 @@ export function buildERC20(opts: ERC20Options): Contract {
   //   addSnapshot(c, access);
   // }
 
-  // if (opts.pausable) {
-  //   addPausable(c, access, [functions._beforeTokenTransfer]);
-  // }
+  if (opts.pausable) {
+    addPausable(c, access, []);
+  }
 
   // if (opts.premint) {
   //   addPremint(c, opts.premint);
@@ -156,6 +156,7 @@ const functions = defineFunctions({
       { name: 'amount', type: 'Uint256' },
     ],
   },
+
 
   // pause: {
   //   kind: 'external' as const,

@@ -16,6 +16,22 @@ export function printContract(contract: Contract, opts?: Options): string {
 
   const hasOverrides = fns.override.some(l => l.length > 0);
 
+	// map of functions to the module it was imported from
+	const baseImports : Map<string, string> = new Map();
+  for (const fn of contract.functions) {
+    if (fn.module !== undefined) {
+      // find the corresponding import
+      for (const parent of contract.parents) {
+        if (parent.contract.name === fn.module) {
+          baseImports.set(fn.name, convertPathToImport(parent.contract.path));
+          break;
+        }
+      }
+    }
+  }
+  const importStatementObjs = toImportStatements(baseImports);
+  const importLines = toImportLines(importStatementObjs);
+
   return formatLines(
     ...spaceBetween(
       [
@@ -29,6 +45,9 @@ export function printContract(contract: Contract, opts?: Options): string {
       ],
 
       contract.imports.map(p => `from ${helpers.transformImport(p)}`),
+
+      importLines,
+
 
       //[
         //...printNatspecTags(contract.natspecTags),
@@ -49,6 +68,54 @@ export function printContract(contract: Contract, opts?: Options): string {
     ),
   );
 }
+
+function convertPathToImport(relativePath: any): string {
+	return relativePath.split('/').join('.');
+}
+
+function toImportStatements(baseImports: Map<string, string>) {
+  const importStatements: Map<string, string[]> = new Map();
+  for (const [importName, moduleName] of baseImports.entries()) {
+    const existingModuleFunctions = importStatements.get(moduleName);
+    if (existingModuleFunctions === undefined) {
+      importStatements.set(moduleName, [importName]);
+    } else {
+      existingModuleFunctions.push(importName);
+      //importStatements.set(moduleName, existingModuleFunctions);
+    }
+  }
+  return importStatements;
+
+  // const importStatements : string[] = [];
+  // for (const moduleKeys of baseImports.keys()) {
+  //   getImportStatement(baseImports.)
+  // }
+}
+
+function toImportLines(importStatements: Map<string, string[]>) {
+  const lines = [];
+  //const fnLines: string[] = [];
+  for (const [module, fns] of importStatements.entries()) {
+    lines.push(`from ${module} import (`);
+    lines.push(fns.map(p => `${p},`));    
+  }
+  //lines.push(fnLines);
+  lines.push(`)`);
+  return lines;
+}
+
+// function getBaseImportLines(baseImports: Map<string, string>) {
+//   const result:string[] = [];
+//   for (const [importName, moduleName] of baseImports.entries()) {
+//     result.push(`from ${moduleName} import ${importName}`)
+//   }
+//   return result;
+
+//   // const importStatements : string[] = [];
+//   // for (const moduleKeys of baseImports.keys()) {
+//   //   getImportStatement(baseImports.)
+//   // }
+// }
 
 function printInheritance(contract: Contract, { transformName }: Helpers): [] | [string] {
   if (contract.parents.length > 0) {

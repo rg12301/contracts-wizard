@@ -30,10 +30,10 @@ export function setAccessControl(c: ContractBuilder, fn: BaseFunction, access: A
 const parents = {
   Ownable: {
     name: 'Ownable',
-    path: 'openzeppelin/contracts/access/Ownable',
+    path: 'contracts/Ownable_base',
   },
   AccessControl: {
     name: 'AccessControl',
-    path: 'openzeppelin/contracts/access/AccessControl',
+    path: 'contracts/AccessControl_base',
   },
 };

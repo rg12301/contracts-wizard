@@ -146,8 +146,20 @@ export class ContractBuilder implements Contract {
     }
   }
 
+
+
   addConstructorArgument(arg: FunctionArgument) {
-    this.constructorArgs.push(arg);
+    // TODO fix this comparison
+    let hasArg = false;
+    this.constructorArgs.map(a => {
+      if (a.name == arg.name) {
+        hasArg = true;
+        // TODO can't break out of this
+      }
+    });
+    if (!hasArg) {
+      this.constructorArgs.push(arg);
+    }
   }
 
   addConstructorCode(code: string) {

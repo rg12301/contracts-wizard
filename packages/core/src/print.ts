@@ -198,7 +198,7 @@ function hasInitializer(parent: Parent) {
   // CAUTION
   // This list is validated by compilation of SafetyCheck.sol.
   // Always keep this list and that file in sync.
-  return !['Initializable', 'ERC20Votes'].includes(parent.contract.name);
+  return !['Initializable', 'ERC20Votes', 'Pausable'].includes(parent.contract.name);
 }
 
 type SortedFunctions = Record<'code' | 'modifiers' | 'override', ContractFunction[]>;

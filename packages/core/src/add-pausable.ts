@@ -7,7 +7,7 @@ export function addPausable(c: ContractBuilder, access: Access, pausableFns: Bas
   c.addParent({
     name: 'Pausable',
     path: 'contracts/Pausable_base',    
-  }, ['Pausable_pause', 'Pausable_unpause']);
+  }, [], ['Pausable_pause', 'Pausable_unpause']);
 
   for (const fn of pausableFns) {
     // TODO add these base functions to parent imports

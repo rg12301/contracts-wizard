@@ -34,6 +34,23 @@ export function printContract(contract: Contract, opts?: Options): string {
   const importStatementObjs = toImportStatements(baseImports);
   const importLines = toImportLines(importStatementObjs);
 
+  const parentImportsMap: Map<string, string[]> = new Map();
+  for (const parent of contract.parents) {
+    if (parent.functions !== undefined) {
+      parentImportsMap.set(convertPathToImport(parent.contract.path), parent.functions);
+    }
+  }
+  // TODO this is temporary measure to merge maps since we have duplicates
+  importStatementObjs.forEach((value, key) => {
+    if (parentImportsMap.get(key) !== undefined) {
+      parentImportsMap.delete(key);
+    }
+  });
+  const parentImportLines = toImportLines(parentImportsMap);
+  
+
+
+
   return formatLines(
     ...spaceBetween(
       [
@@ -46,9 +63,10 @@ export function printContract(contract: Contract, opts?: Options): string {
         `from starkware.cairo.common.uint256 import Uint256`
       ],
 
-      contract.imports.map(p => `from ${helpers.transformImport(p)}`),
+      //contract.imports.map(p => `from ${helpers.transformImport(p)}`),
 
       importLines,
+      parentImportLines,
 
 
       //[
@@ -102,7 +120,9 @@ function toImportLines(importStatements: Map<string, string[]>) {
     lines.push(fns.map(p => `${p},`));    
   }
   //lines.push(fnLines);
-  lines.push(`)`);
+  if (lines.length > 0) {
+    lines.push(`)`);
+  }
   return lines;
 }
 

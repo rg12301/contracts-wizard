@@ -8,13 +8,13 @@ export type Access = typeof accessOptions[number];
 export function setAccessControl(c: ContractBuilder, fn: BaseFunction, access: Access, role: string) {
   switch (access) {
     case 'ownable': {
-      c.addParent(parents.Ownable, [{ lit:'owner' }, 'Ownable_only_owner']);
+      c.addParent(parents.Ownable, [{ lit:'owner' }], ['Ownable_only_owner']);
       c.addModifier('Ownable_only_owner()', fn);
       break;
     }
     case 'roles': {
       const roleId = role + '_ROLE';
-      if (c.addParent(parents.AccessControl)) {
+      if (c.addParent(parents.AccessControl, [], [])) {
         c.addConstructorCode('_grantRole(DEFAULT_ADMIN_ROLE, msg.sender);');
       }
       // c.addOverride(parents.AccessControl.name, supportsInterface);

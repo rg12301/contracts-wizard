@@ -87,6 +87,7 @@ function addBase(c: ContractBuilder, name: string, symbol: string) {
       path: 'contracts/token/ERC20_base',
     },
     [name, symbol, { lit:'initial_supply' }, { lit:'recipient' }],
+    ['ERC20_transfer', 'ERC20_transferFrom', 'ERC20_approve', 'ERC20_increaseAllowance', 'ERC20_decreaseAllowance' ]
   );
 }
 

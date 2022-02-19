@@ -23,7 +23,9 @@ export function printContract(contract: Contract, opts?: Options): string {
       // find the corresponding import
       for (const parent of contract.parents) {
         if (parent.contract.name === fn.module) {
-          baseImports.set(fn.name, convertPathToImport(parent.contract.path));
+          const prefixedParentContractName = `${parent.contract.name}_${fn.name}`;
+
+          baseImports.set(prefixedParentContractName, convertPathToImport(parent.contract.path));
           break;
         }
       }

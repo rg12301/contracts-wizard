@@ -8,7 +8,7 @@ export type Access = typeof accessOptions[number];
 export function setAccessControl(c: ContractBuilder, fn: BaseFunction, access: Access, role: string) {
   switch (access) {
     case 'ownable': {
-      c.addParent(parents.Ownable, [{ lit:'owner' }]);
+      c.addParent(parents.Ownable, [{ lit:'owner' }, 'Ownable_only_owner']);
       c.addModifier('Ownable_only_owner()', fn);
       break;
     }

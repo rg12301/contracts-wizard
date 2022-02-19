@@ -21,6 +21,7 @@ export type Value = string | number | { lit: string } | { note: string, value: V
 export interface Parent {
   contract: ParentContract;
   params: Value[];
+  functions?: string[];
 }
 
 export interface ParentContract {
@@ -108,9 +109,9 @@ export class ContractBuilder implements Contract {
     return [...this.variableSet];
   }
 
-  addParent(contract: ParentContract, params: Value[] = []): boolean {
+  addParent(contract: ParentContract, params: Value[] = [], functions?: string[]): boolean {
     const present = this.parentMap.has(contract.name);
-    this.parentMap.set(contract.name, { contract, params });
+    this.parentMap.set(contract.name, { contract, params, functions });
     return !present;
   }
 

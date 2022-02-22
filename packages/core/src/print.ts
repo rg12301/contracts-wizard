@@ -42,12 +42,18 @@ export function printContract(contract: Contract, opts?: Options): string {
   }
   // TODO this is temporary measure to merge maps since we have duplicates
   importStatementObjs.forEach((value, key) => {
-    if (parentImportsMap.get(key) !== undefined) {
-      parentImportsMap.delete(key);
+    const parentValue = parentImportsMap.get(key);
+    if (parentValue !== undefined) {
+      parentImportsMap.set(key, Array.from(new Set(parentValue.concat(value))));
     }
   });
-  const parentImportLines = toImportLines(parentImportsMap);
-  
+  const parentImportLines = toImportLines(parentImportsMap); 
+
+  // // this deletes the origs from importstatement map
+  // parentImportsMap.forEach((value, key) => {
+  //   importStatementObjs.delete(key);
+  // });
+
 
 
 
@@ -65,8 +71,9 @@ export function printContract(contract: Contract, opts?: Options): string {
 
       //contract.imports.map(p => `from ${helpers.transformImport(p)}`),
 
-      importLines,
       parentImportLines,
+
+      //importLines,
 
 
       //[

@@ -4,14 +4,14 @@ import { Access, setAccessControl } from './set-access-control';
 import { defineFunctions } from './utils/define-functions';
 
 export function addPausable(c: ContractBuilder, access: Access, pausableFns: BaseFunction[]) {
-  c.addParent({
+  c.addParentLibrary({
     prefix: 'Pausable',
     modulePath: 'openzeppelin/security/pausable',    
   }, [], ['Pausable_pause', 'Pausable_unpause', 'Pausable_when_not_paused']);
 
   for (const fn of pausableFns) {
     // TODO add these base functions to parent imports automatically
-    c.addModifier('Pausable_when_not_paused()', fn);
+    c.addLibraryCall('Pausable_when_not_paused()', fn);
   }
 
   setAccessControl(c, functions.pause, access, 'PAUSER');

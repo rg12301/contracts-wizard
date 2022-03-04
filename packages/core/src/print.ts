@@ -205,7 +205,7 @@ function sortedFunctions(contract: Contract): SortedFunctions {
   for (const fn of contract.functions) {
     if (fn.code.length > 0) {
       fns.code.push(fn);
-    } else if (fn.modifiers.length > 0) {
+    } else if (fn.libraryCalls.length > 0) {
       fns.modifiers.push(fn);
     } else {
       fns.override.push(fn);
@@ -273,7 +273,7 @@ function printFunction(fn: ContractFunction, helpers: Helpers): Lines[] {
   // }
 
   // TODO
-  fn.modifiers.forEach(modifier => {
+  fn.libraryCalls.forEach(modifier => {
     const modifierCall = `${modifier}`;
     code.push(modifierCall);
   });

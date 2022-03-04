@@ -39,7 +39,7 @@ export interface BaseFunction {
 }
 
 export interface ContractFunction extends BaseFunction {
-  modifiers: string[];
+  libraryCalls: string[];
   code: string[];
   final: boolean;
 }
@@ -102,15 +102,15 @@ export class ContractBuilder implements Contract {
     return [...this.variableSet];
   }
 
-  addParent(contract: Library, params: Value[] = [], functions: string[]): boolean {
+  addParentLibrary(contract: Library, params: Value[] = [], functions: string[]): boolean {
     const present = this.parentMap.has(contract.prefix);
     this.parentMap.set(contract.prefix, { library: contract, params, functions });
     return !present;
   }
 
-  addModifier(modifier: string, baseFn: BaseFunction) {
+  addLibraryCall(modifier: string, baseFn: BaseFunction) {
     const fn = this.addFunction(baseFn);
-    fn.modifiers.push(modifier);
+    fn.libraryCalls.push(modifier);
   }
 
   addNatspecTag(key: string, value: string) {
@@ -125,7 +125,7 @@ export class ContractBuilder implements Contract {
       return got;
     } else {
       const fn: ContractFunction = {
-        modifiers: [],
+        libraryCalls: [],
         code: [],
         final: false,
         ...baseFn,

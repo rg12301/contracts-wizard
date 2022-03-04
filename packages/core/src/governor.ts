@@ -101,7 +101,7 @@ function addBase(c: ContractBuilder, { name }: GovernorOptions) {
 //     c.addParent(
 //       {
 //         name: 'GovernorSettings',
-//         path: 'openzeppelin/contracts/governance/extensions/GovernorSettings',
+//         path: '@openzeppelin/contracts/governance/extensions/GovernorSettings.sol',
 //       },
 //       [
 //         { value: getVotingDelay(allOpts), note: allOpts.delay },
@@ -181,7 +181,7 @@ function addBase(c: ContractBuilder, { name }: GovernorOptions) {
 //   if (!bravo) {
 //     c.addParent({
 //       name: 'GovernorCountingSimple',
-//       path: 'openzeppelin/contracts/governance/extensions/GovernorCountingSimple',
+//       path: '@openzeppelin/contracts/governance/extensions/GovernorCountingSimple.sol',
 //     });
 //   }
 // }
@@ -208,7 +208,7 @@ function addBase(c: ContractBuilder, { name }: GovernorOptions) {
 
 //   c.addParent({
 //     name: parentName,
-//     path: `openzeppelin/contracts/governance/extensions/${parentName}`,
+//     path: `@openzeppelin/contracts/governance/extensions/${parentName}.sol`,
 //   }, [{ lit: tokenArg }]);
 //   c.addOverride(parentName, functions.getVotes);
 // }
@@ -229,10 +229,19 @@ function addBase(c: ContractBuilder, { name }: GovernorOptions) {
 //       });
 //     }
 
+//     let { quorumFractionNumerator, quorumFractionDenominator } = getQuorumFractionComponents(opts.quorumPercent);
+
+//     if (quorumFractionDenominator !== undefined) {
+//       c.addOverride('GovernorVotesQuorumFraction', functions.quorumDenominator);
+//       c.setFunctionBody([
+//         `return ${quorumFractionDenominator};`
+//       ], functions.quorumDenominator, 'pure');
+//     }
+
 //     c.addParent({
 //       name: 'GovernorVotesQuorumFraction',
-//       path: 'openzeppelin/contracts/governance/extensions/GovernorVotesQuorumFraction',
-//     }, [opts.quorumPercent]);
+//       path: '@openzeppelin/contracts/governance/extensions/GovernorVotesQuorumFraction.sol',
+//     }, [quorumFractionNumerator]);
 //     c.addOverride('GovernorVotesQuorumFraction', functions.quorum);
 //   }
 
@@ -260,6 +269,26 @@ function addBase(c: ContractBuilder, { name }: GovernorOptions) {
 //   },
 // } as const;
 
+// function getQuorumFractionComponents(quorumPercent: number): {quorumFractionNumerator: number, quorumFractionDenominator: string | undefined} {
+//   let quorumFractionNumerator = quorumPercent;
+//   let quorumFractionDenominator = undefined;
+
+//   const quorumPercentSegments = quorumPercent.toString().split(".");
+//   if (quorumPercentSegments.length > 2) {
+//     throw new OptionsError({
+//       quorumPercent: 'Invalid percentage',
+//     });
+//   } else if (quorumPercentSegments.length == 2 && quorumPercentSegments[0] !== undefined && quorumPercentSegments[1] !== undefined) {
+//     quorumFractionNumerator = parseInt(quorumPercentSegments[0].concat(quorumPercentSegments[1]));
+//     const decimals = quorumPercentSegments[1].length;
+//     quorumFractionDenominator = '100';
+//     while (quorumFractionDenominator.length < decimals + 3) {
+//       quorumFractionDenominator += '0';
+//     }
+//   }
+//   return { quorumFractionNumerator, quorumFractionDenominator };
+// }
+
 // function addTimelock(c: ContractBuilder, { timelock }: GovernorOptions) {
 //   if (timelock === false) {
 //     return;
@@ -275,7 +304,7 @@ function addBase(c: ContractBuilder, { name }: GovernorOptions) {
 
 //   c.addParent({
 //     name: parentName,
-//     path: `openzeppelin/contracts/governance/extensions/${parentName}`,
+//     path: `@openzeppelin/contracts/governance/extensions/${parentName}.sol`,
 //   }, [{ lit: timelockArg }]);
 //   c.addOverride('IGovernor', functions.propose);
 //   c.addOverride(parentName, functions._execute);
@@ -295,7 +324,7 @@ function addBase(c: ContractBuilder, { name }: GovernorOptions) {
 
 //     c.addParent({
 //       name: 'GovernorCompatibilityBravo',
-//       path: 'openzeppelin/contracts/governance/compatibility/GovernorCompatibilityBravo',
+//       path: '@openzeppelin/contracts/governance/compatibility/GovernorCompatibilityBravo.sol',
 //     });
 //     c.addOverride('IGovernor', functions.state);
 //     c.addOverride('GovernorCompatibilityBravo', functions.propose);
@@ -307,19 +336,19 @@ function addBase(c: ContractBuilder, { name }: GovernorOptions) {
 //   votingDelay: {
 //     args: [],
 //     returns: ['uint256'],
-//     kind: 'external',
+//     kind: 'public',
 //     mutability: 'pure',
 //   },
 //   votingPeriod: {
 //     args: [],
 //     returns: ['uint256'],
-//     kind: 'external',
+//     kind: 'public',
 //     mutability: 'pure',
 //   },
 //   proposalThreshold: {
 //     args: [],
 //     returns: ['uint256'],
-//     kind: 'external',
+//     kind: 'public',
 //     mutability: 'pure',
 //   },
 //   quorum: {
@@ -327,7 +356,13 @@ function addBase(c: ContractBuilder, { name }: GovernorOptions) {
 //       { name: 'blockNumber', type: 'uint256' },
 //     ],
 //     returns: ['uint256'],
-//     kind: 'external',
+//     kind: 'public',
+//     mutability: 'view',
+//   },
+//   quorumDenominator: {
+//     args: [],
+//     returns: ['uint256'],
+//     kind: 'public',
 //     mutability: 'view',
 //   },
 //   getVotes: {
@@ -336,7 +371,7 @@ function addBase(c: ContractBuilder, { name }: GovernorOptions) {
 //       { name: 'blockNumber', type: 'uint256' },
 //     ],
 //     returns: ['uint256'],
-//     kind: 'external',
+//     kind: 'public',
 //     mutability: 'view',
 //   },
 //   propose: {
@@ -347,7 +382,7 @@ function addBase(c: ContractBuilder, { name }: GovernorOptions) {
 //       { name: 'description', type: 'string memory' },
 //     ],
 //     returns: ['uint256'],
-//     kind: 'external',
+//     kind: 'public',
 //   },
 //   _execute: {
 //     args: [
@@ -374,7 +409,7 @@ function addBase(c: ContractBuilder, { name }: GovernorOptions) {
 //       { name: 'proposalId', type: 'uint256' },
 //     ],
 //     returns: ['ProposalState'],
-//     kind: 'external',
+//     kind: 'public',
 //     mutability: 'view',
 //   },
 //   _executor: {

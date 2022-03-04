@@ -13,20 +13,20 @@ export function setUpgradeable(c: ContractBuilder, upgradeable: Upgradeable, acc
 
   c.upgradeable = true;
 
-  c.addParent({
-    name: 'Initializable',
-    path: 'openzeppelin/contracts/proxy/utils/Initializable',
-  });
+  // c.addParent({
+  //   name: 'Initializable',
+  //   path: 'openzeppelin/contracts/proxy/utils/Initializable',
+  // });
 
   switch (upgradeable) {
     case 'transparent': break;
 
     case 'uups': {
       setAccessControl(c, functions._authorizeUpgrade, access, 'UPGRADER');
-      c.addParent({
-        name: 'UUPSUpgradeable',
-        path: 'openzeppelin/contracts/proxy/utils/UUPSUpgradeable',
-      });
+      // c.addParent({
+      //   name: 'UUPSUpgradeable',
+      //   path: 'openzeppelin/contracts/proxy/utils/UUPSUpgradeable',
+      // });
       // c.addOverride('UUPSUpgradeable', functions._authorizeUpgrade);
       c.setFunctionBody([], functions._authorizeUpgrade);
       break;

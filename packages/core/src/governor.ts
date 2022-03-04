@@ -76,13 +76,13 @@ export function buildGovernor(opts: GovernorOptions): Contract {
 }
 
 function addBase(c: ContractBuilder, { name }: GovernorOptions) {
-  c.addParent(
-    {
-      name: 'Governor',
-      path: 'openzeppelin/contracts/governance/Governor',
-    },
-    [name],
-  );
+  // c.addParent(
+  //   {
+  //     name: 'Governor',
+  //     path: 'openzeppelin/contracts/governance/Governor',
+  //   },
+  //   [name],
+  // );
   // c.addOverride('IGovernor', functions.votingDelay);
   // c.addOverride('IGovernor', functions.votingPeriod);
   // c.addOverride('IGovernor', functions.quorum);

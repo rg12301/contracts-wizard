@@ -8,33 +8,21 @@ export type Access = typeof accessOptions[number];
 export function setAccessControl(c: ContractBuilder, fn: BaseFunction, access: Access, role: string) {
   switch (access) {
     case 'ownable': {
+      // c.addLibraryFunction(parents.Ownable, function)
+
+
       c.addParent(parents.Ownable, [{ lit:'owner' }], ['Ownable_only_owner']);
       c.addConstructorArgument({ name: 'owner', type: 'felt'});
-      c.addModifier('Ownable_only_owner()', fn);
+      c.addModifier('Ownable_only_owner()', fn); // TODO make this add something in the parent
       break;
     }
-    case 'roles': {
-      const roleId = role + '_ROLE';
-      if (c.addParent(parents.AccessControl, [], [])) {
-        c.addConstructorCode('_grantRole(DEFAULT_ADMIN_ROLE, msg.sender);');
-      }
-      // c.addOverride(parents.AccessControl.name, supportsInterface);
-      if (c.addVariable(`bytes32 public constant ${roleId} = keccak256("${roleId}");`)) {
-        c.addConstructorCode(`_grantRole(${roleId}, msg.sender);`);
-      }
-      c.addModifier(`onlyRole(${roleId})`, fn);
-      break;
-    }
+
   }
 }
 
 const parents = {
   Ownable: {
-    name: 'Ownable',
-    path: 'contracts/Ownable_base',
-  },
-  AccessControl: {
-    name: 'AccessControl',
-    path: 'contracts/AccessControl_base',
+    prefix: 'Ownable',
+    modulePath: 'openzeppelin/access/ownable',
   },
 };

@@ -29,7 +29,7 @@ export function zipContract(c: Contract): JSZip {
   const fileName = c.name + '.cairo';
 
   const dependencies = {
-    [fileName]: c.parents.map(p => transformImport(p.contract.path)),
+    [fileName]: c.parents.map(p => transformImport(p.library.modulePath)),
     ...contracts.dependencies,
   };
 

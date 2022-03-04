@@ -4,7 +4,7 @@ import { toIdentifier } from './utils/to-identifier';
 export interface Contract {
   name: string;
   license: string;
-  parents: Parent[]; //
+  parents: Parent[];
   natspecTags: NatspecTag[];
   imports: string[]; //
   functions: ContractFunction[];
@@ -18,14 +18,14 @@ export interface Contract {
 export type Value = string | number | { lit: string } | { note: string, value: Value };
 
 export interface Parent {
-  contract: ParentContract;
+  library: Library;
   params: Value[];
   functions?: string[];
 }
 
-export interface ParentContract {
-  name: string;
-  path: string;
+export interface Library {
+  prefix: string;
+  modulePath: string;
 }
 
 export interface BaseFunction {
@@ -77,9 +77,9 @@ export class ContractBuilder implements Contract {
 
   get parents(): Parent[] {
     return [...this.parentMap.values()].sort((a, b) => {
-      if (a.contract.name === 'Initializable') {
+      if (a.library.prefix === 'Initializable') {
         return -1;
-      } else if (b.contract.name === 'Initializable') {
+      } else if (b.library.prefix === 'Initializable') {
         return 1;
       } else {
         return 0;
@@ -89,7 +89,7 @@ export class ContractBuilder implements Contract {
 
   get imports(): string[] {
     return [
-      ...[...this.parentMap.values()].map(p => p.contract.path),
+      ...[...this.parentMap.values()].map(p => p.library.modulePath),
       // this is deleted, but figure out how to add the base functions here  ...this.using.map(u => u.library.path),
     ];
   }
@@ -102,9 +102,9 @@ export class ContractBuilder implements Contract {
     return [...this.variableSet];
   }
 
-  addParent(contract: ParentContract, params: Value[] = [], functions: string[]): boolean {
-    const present = this.parentMap.has(contract.name);
-    this.parentMap.set(contract.name, { contract, params, functions });
+  addParent(contract: Library, params: Value[] = [], functions: string[]): boolean {
+    const present = this.parentMap.has(contract.prefix);
+    this.parentMap.set(contract.prefix, { library: contract, params, functions });
     return !present;
   }
 

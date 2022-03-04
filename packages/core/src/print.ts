@@ -22,10 +22,10 @@ export function printContract(contract: Contract, opts?: Options): string {
     if (fn.module !== undefined) {
       // find the corresponding import
       for (const parent of contract.parents) {
-        if (parent.contract.name === fn.module) {
-          const prefixedParentContractName = `${parent.contract.name}_${fn.name}`;
+        if (parent.library.prefix === fn.module) {
+          const prefixedParentContractName = `${parent.library.prefix}_${fn.name}`;
 
-          baseImports.set(prefixedParentContractName, convertPathToImport(parent.contract.path));
+          baseImports.set(prefixedParentContractName, convertPathToImport(parent.library.modulePath));
           break;
         }
       }
@@ -37,7 +37,7 @@ export function printContract(contract: Contract, opts?: Options): string {
   const parentImportsMap: Map<string, string[]> = new Map();
   for (const parent of contract.parents) {
     if (parent.functions !== undefined) {
-      parentImportsMap.set(convertPathToImport(parent.contract.path), parent.functions);
+      parentImportsMap.set(convertPathToImport(parent.library.modulePath), parent.functions);
     }
   }
   // TODO this is temporary measure to merge maps since we have duplicates
@@ -142,7 +142,7 @@ function toImportLines(importStatements: Map<string, string[]>) {
 
 function printInheritance(contract: Contract, { transformName }: Helpers): [] | [string] {
   if (contract.parents.length > 0) {
-    return ['is ' + contract.parents.map(p => transformName(p.contract.name)).join(', ')];
+    return ['is ' + contract.parents.map(p => transformName(p.library.prefix)).join(', ')];
   } else {
     return [];
   }
@@ -193,7 +193,7 @@ function hasInitializer(parent: Parent) {
   // CAUTION
   // This list is validated by compilation of SafetyCheck.sol.
   // Always keep this list and that file in sync.
-  return !['Initializable', 'ERC20Votes', 'Pausable'].includes(parent.contract.name);
+  return !['Initializable', 'ERC20Votes', 'Pausable'].includes(parent.library.prefix);
 }
 
 type SortedFunctions = Record<'code' | 'modifiers' | 'override', ContractFunction[]>;
@@ -215,8 +215,8 @@ function sortedFunctions(contract: Contract): SortedFunctions {
   return fns;
 }
 
-function printParentConstructor({ contract, params }: Parent, helpers: Helpers): [] | [string] {
-  const fn = `${contract.name}_initializer`;
+function printParentConstructor({ library: contract, params }: Parent, helpers: Helpers): [] | [string] {
+  const fn = `${contract.prefix}_initializer`;
   return [
     fn + '(' + params.map(printValue).join(', ') + ')',
   ];

@@ -83,8 +83,8 @@ export function buildERC20(opts: ERC20Options): Contract {
 function addBase(c: ContractBuilder, name: string, symbol: string) {
   c.addParent(
     {
-      name: 'ERC20',
-      path: 'contracts/token/ERC20_base',
+      prefix: 'ERC20',
+      modulePath: 'openzeppelin/token/erc20/library',
     },
     [name, symbol, { lit:'initial_supply' }, { lit:'recipient' }],
     ['ERC20_transfer', 'ERC20_transferFrom', 'ERC20_approve', 'ERC20_increaseAllowance', 'ERC20_decreaseAllowance' ]

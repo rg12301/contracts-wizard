@@ -5,7 +5,6 @@ export interface Contract {
   name: string;
   license: string;
   parents: Parent[]; //
-  using: Using[]; //
   natspecTags: NatspecTag[];
   imports: string[]; //
   functions: ContractFunction[];
@@ -27,11 +26,6 @@ export interface Parent {
 export interface ParentContract {
   name: string;
   path: string;
-}
-
-export interface Using {
-  library: ParentContract;
-  usingFor: string;
 }
 
 export interface BaseFunction {
@@ -67,7 +61,6 @@ export class ContractBuilder implements Contract {
   license: string = 'MIT';
   upgradeable = false;
 
-  readonly using: Using[] = [];
   readonly natspecTags: NatspecTag[] = [];
 
   readonly constructorArgs: FunctionArgument[] = [];
@@ -97,7 +90,7 @@ export class ContractBuilder implements Contract {
   get imports(): string[] {
     return [
       ...[...this.parentMap.values()].map(p => p.contract.path),
-      ...this.using.map(u => u.library.path),
+      // this is deleted, but figure out how to add the base functions here  ...this.using.map(u => u.library.path),
     ];
   }
 
@@ -113,10 +106,6 @@ export class ContractBuilder implements Contract {
     const present = this.parentMap.has(contract.name);
     this.parentMap.set(contract.name, { contract, params, functions });
     return !present;
-  }
-
-  addUsing(library: ParentContract, usingFor: string) {
-    this.using.push({ library, usingFor });
   }
 
   addModifier(modifier: string, baseFn: BaseFunction) {

@@ -74,27 +74,22 @@ export function printContract(contract: Contract, opts?: Options): string {
 
       //contract.imports.map(p => `from ${helpers.transformImport(p)}`),
 
+      // here we should print any imports (including any base library functions)
       parentImportLines,
 
-      //importLines,
-
-
-      //[
-        //...printNatspecTags(contract.natspecTags),
-        //[`contract ${contract.name}`, ...printInheritance(contract, helpers), '{'].join(' '),
-
-        spaceBetween(
-          //printUsingFor(contract, helpers),
-          contract.variables.map(helpers.transformVariable),
-          printConstructor(contract, helpers),
-          ...fns.code,
-          ...fns.modifiers,
-          hasOverrides ? [`#`, `# Externals`, `#`] : [],
-          ...fns.override,
-        ),
-
-        //`}`,
-      //],
+      spaceBetween(
+        contract.variables.map(helpers.transformVariable),
+        printConstructor(contract, helpers),
+        ...fns.code,
+        ...fns.modifiers,
+        hasOverrides ? 
+          [
+            `#`,
+            `# Externals`,
+            `#`
+          ] : [],
+        ...fns.override,
+      ),
     ),
   );
 }
@@ -151,12 +146,6 @@ function printInheritance(contract: Contract, { transformName }: Helpers): [] | 
   } else {
     return [];
   }
-}
-
-function printUsingFor(contract: Contract, { transformName }: Helpers): string[] {
-  return contract.using.map(
-    u => `using ${transformName(u.library.name)} for ${transformName(u.usingFor)};`,
-  );
 }
 
 function printConstructor(contract: Contract, helpers: Helpers): Lines[] {

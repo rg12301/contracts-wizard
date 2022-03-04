@@ -26,6 +26,8 @@ export function buildERC20(opts: ERC20Options): Contract {
 
   const { access, upgradeable, info } = withCommonDefaults(opts);
 
+  // TODO add imports for starkware common libraries without initializer
+
   addBase(c, opts.name, opts.symbol);
 
   c.addFunction(functions.transfer);

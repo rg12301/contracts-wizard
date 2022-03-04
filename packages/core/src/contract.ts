@@ -20,7 +20,7 @@ export type Value = string | number | { lit: string } | { note: string, value: V
 export interface Parent {
   library: Library;
   params: Value[];
-  functions?: string[];
+  functions: string[];
 }
 
 export interface Library {

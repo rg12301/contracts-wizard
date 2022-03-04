@@ -60,7 +60,10 @@ export function printContract(contract: Contract, opts?: Options): string {
   return formatLines(
     ...spaceBetween(
       [
-        // TODO print license ${contract.license}
+        `# SPDX-License-Identifier: ${contract.license}`,
+      ],
+      
+      [
         `%lang starknet`
       ],
 

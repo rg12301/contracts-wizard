@@ -124,13 +124,9 @@ function toImportStatements(baseImports: Map<string, string>) {
 
 function toImportLines(importStatements: Map<string, string[]>) {
   const lines = [];
-  //const fnLines: string[] = [];
   for (const [module, fns] of importStatements.entries()) {
     lines.push(`from ${module} import (`);
-    lines.push(fns.map(p => `${p},`));    
-  }
-  //lines.push(fnLines);
-  if (lines.length > 0) {
+    lines.push(fns.map(p => `${p},`));
     lines.push(`)`);
   }
   return lines;

@@ -21,8 +21,6 @@ export interface ERC20Options extends CommonOptions {
 
 export function buildERC20(opts: ERC20Options): Contract {
   const c = new ContractBuilder(opts.name);
-  c.addConstructorArgument({ name:'initial_supply', type:'Uint256' });
-  c.addConstructorArgument({ name:'recipient', type:'felt' });
 
   const { access, upgradeable, info } = withCommonDefaults(opts);
 
@@ -95,9 +93,14 @@ function addBase(c: ContractBuilder, name: string, symbol: string) {
       prefix: 'ERC20',
       modulePath: 'openzeppelin/token/erc20/library',
     },
-    [name, symbol, { lit:'initial_supply' }, { lit:'recipient' }],
-    ['ERC20_transfer', 'ERC20_transferFrom', 'ERC20_approve', 'ERC20_increaseAllowance', 'ERC20_decreaseAllowance' ]
+    [name, symbol, { lit:'decimals' }],
+    ['ERC20_transfer', 'ERC20_transferFrom', 'ERC20_approve', 'ERC20_increaseAllowance', 'ERC20_decreaseAllowance', `ERC20_initializer`, `ERC20_mint` ]
   );
+  c.addConstructorArgument({ name:'decimals', type:'felt' });
+  c.addConstructorArgument({ name:'initial_supply', type:'Uint256' });
+  c.addConstructorArgument({ name:'recipient', type:'felt' });
+  c.addConstructorCode('ERC20_mint(recipient, initial_supply)');
+
 }
 
 // function addBurnable(c: ContractBuilder) {

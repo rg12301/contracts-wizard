@@ -114,7 +114,7 @@ function addBase(c: ContractBuilder, name: string, symbol: string) {
 
 function addBurnable(c: ContractBuilder) {
   c.addFunction(functions.burn);
-  c.addFunctionCode('# TODO add restriction to the above?', functions.burn);
+  c.addFunctionCode('# TODO restrict the above', functions.burn);
 }
 
 // function addSnapshot(c: ContractBuilder, access: Access) {

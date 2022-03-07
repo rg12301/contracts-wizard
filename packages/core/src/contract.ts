@@ -21,6 +21,12 @@ export interface Parent {
   library: Library;
   params: Value[];
   functions: string[];
+  initializable?: boolean;
+}
+
+export interface StandaloneImport {
+  library: Library;
+  functions: string[];
 }
 
 export interface Library {
@@ -104,9 +110,9 @@ export class ContractBuilder implements Contract {
     return [...this.variableSet];
   }
 
-  addParentLibrary(contract: Library, params: Value[] = [], functions: string[]): boolean {
+  addParentLibrary(contract: Library, params: Value[] = [], functions: string[], initializable?: boolean): boolean {
     const present = this.parentMap.has(contract.prefix);
-    this.parentMap.set(contract.prefix, { library: contract, params, functions });
+    this.parentMap.set(contract.prefix, { library: contract, params, functions, initializable });
     return !present;
   }
 

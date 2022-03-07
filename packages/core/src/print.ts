@@ -228,7 +228,10 @@ function sortedFunctions(contract: Contract): SortedFunctions {
   return fns;
 }
 
-function printParentConstructor({ library: contract, params }: Parent, helpers: Helpers): [] | [string] {
+function printParentConstructor({ library: contract, params, initializable }: Parent, helpers: Helpers): [] | [string] {
+  if (initializable === false) { // treat undefined as true
+    return [];
+  }
   const fn = `${contract.prefix}_initializer`;
   return [
     fn + '(' + params.map(printValue).join(', ') + ')',

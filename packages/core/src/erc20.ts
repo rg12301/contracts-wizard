@@ -41,6 +41,16 @@ export function buildERC20(opts: ERC20Options): Contract {
   c.addFunction(functions.increaseAllowance);
   c.addFunction(functions.decreaseAllowance);
 
+  c.addParentLibrary(
+    {
+      prefix: '',
+      modulePath: 'openzeppelin.utils.constants',
+    },
+    [],
+    ['TRUE'],
+    false
+  );
+
   // c.addFunctionCode(`# Cairo equivalent to 'return (true)'`, functions.transfer);
   // c.addFunctionCode(`# Cairo equivalent to 'return (true)'`, functions.transferFrom);
   // c.addFunctionCode(`# Cairo equivalent to 'return (true)'`, functions.approve);
@@ -100,7 +110,6 @@ function addBase(c: ContractBuilder, name: string, symbol: string) {
   c.addConstructorArgument({ name:'initial_supply', type:'Uint256' });
   c.addConstructorArgument({ name:'recipient', type:'felt' });
   c.addConstructorCode('ERC20_mint(recipient, initial_supply)');
-
 }
 
 // function addBurnable(c: ContractBuilder) {

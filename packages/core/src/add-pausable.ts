@@ -14,12 +14,25 @@ export function addPausable(c: ContractBuilder, access: Access, pausableFns: Bas
     c.addLibraryCall('Pausable_when_not_paused()', fn);
   }
 
+  c.addFunction(functions.paused);
+
   setAccessControl(c, functions.pause, access, 'PAUSER');
 
   setAccessControl(c, functions.unpause, access, 'PAUSER');
 }
 
 const functions = defineFunctions({
+
+  paused: {
+    module: 'Pausable',
+    kind: 'view' as const,
+    implicitArgs: withImplicitArgs(),
+    args: [],
+    returns: [{ name: 'paused', type: 'felt' }],
+    passthrough: true,
+    read: true
+  },
+
   pause: {
     module: 'Pausable',
     kind: 'external' as const,
@@ -33,6 +46,7 @@ const functions = defineFunctions({
     implicitArgs: withImplicitArgs(),
     args: [],
   },
+  
   // pause: {
   //   kind: 'external' as const,
   //   args: [],

@@ -15,7 +15,7 @@
     </label>
   </h1>
 
-  <label class="labeled-input">
+  <!-- <label class="labeled-input">
     <span class="flex justify-between pr-2">
       Security Contact
       <HelpTooltip link="https://github.com/ethereum-lists/contracts/blob/main/README.md#tracking-new-deployments">
@@ -23,7 +23,7 @@
       </HelpTooltip>
     </span>
     <input bind:value={info.securityContact} placeholder="security@example.com" />
-  </label>
+  </label> -->
 
   <label class="labeled-input">
     <span>License</span>

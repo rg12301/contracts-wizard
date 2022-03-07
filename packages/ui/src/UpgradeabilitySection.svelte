@@ -21,7 +21,7 @@
     </label>
   </h1>
 
-  <div class="checkbox-group">
+  <!-- <div class="checkbox-group">
     <label class:checked={upgradeable === 'transparent'}>
       <input type="radio" bind:group={upgradeable} value="transparent">
       Transparent
@@ -36,6 +36,6 @@
       Uses simpler proxy with less overhead, requires including extra code in your contract. Allows flexibility for authorizing upgrades.
       </HelpTooltip>
     </label>
-  </div>
+  </div> -->
 </section>
 

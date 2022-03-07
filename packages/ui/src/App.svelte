@@ -226,7 +226,7 @@
   }
 
   .tab button.selected {
-    background-color: var(--blue-2);
+    background-color: var(--red-3);
     color: white;
     order: -1;
   }

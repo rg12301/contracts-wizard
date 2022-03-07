@@ -61,7 +61,7 @@ body {
   margin: 0;
   font-weight: 500;
   color: transparent;
-  background: linear-gradient(-60deg, #4e5de4, #49a5fa, #51d4ff, #49a5fa, #51d4ff);
+  background: linear-gradient(-60deg, #e55233, #f6643c, #e55233, #f6643c);
   background-size: 200% 200%;
   animation: Gradient 8s ease infinite;
   -moz-animation: Gradient 8s ease infinite;

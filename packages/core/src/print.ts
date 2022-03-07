@@ -14,7 +14,8 @@ export function printContract(contract: Contract, opts?: Options): string {
     fns => fns.map(fn => printFunction(fn, helpers)),
   );
 
-  const hasOverrides = fns.override.some(l => l.length > 0);
+  const hasViews = fns.views.some(l => l.length > 0);
+  const hasExternals = fns.externals.some(l => l.length > 0);
 
 	// map of functions to the module it was imported from
 	const baseImports : Map<string, string> = new Map();
@@ -82,13 +83,20 @@ export function printContract(contract: Contract, opts?: Options): string {
         printConstructor(contract, helpers),
         ...fns.code,
         ...fns.modifiers,
-        hasOverrides ? 
+        hasViews ? 
           [
             `#`,
-            `# Externals`,
+            `# Getters`,
             `#`
           ] : [],
-        ...fns.override,
+        ...fns.views,
+        hasExternals ? 
+        [
+          `#`,
+          `# Externals`,
+          `#`
+        ] : [],
+      ...fns.externals,
       ),
     ),
   );
@@ -196,19 +204,24 @@ function hasInitializer(parent: Parent) {
   return !['Initializable', 'ERC20Votes', 'Pausable'].includes(parent.library.prefix);
 }
 
-type SortedFunctions = Record<'code' | 'modifiers' | 'override', ContractFunction[]>;
+type SortedFunctions = Record<'code' | 'modifiers' | 'views' | 'externals', ContractFunction[]>;
 
 // Functions with code first, then those with modifiers, then the rest
 function sortedFunctions(contract: Contract): SortedFunctions {
-  const fns: SortedFunctions = { code: [], modifiers: [], override: [] };
+  const fns: SortedFunctions = { code: [], modifiers: [], views: [], externals: [] };
 
   for (const fn of contract.functions) {
-    if (fn.code.length > 0) {
+    // if (fn.code.length > 0) {
+    //   fns.code.push(fn);
+    // } else if (fn.libraryCalls.length > 0) {
+    //   fns.modifiers.push(fn);
+    // } else 
+    if (fn.kind === undefined && fn.code.length > 0) { // fallback case, not sure if anything fits in this category
       fns.code.push(fn);
-    } else if (fn.libraryCalls.length > 0) {
-      fns.modifiers.push(fn);
+    } else if (fn.kind === 'view') {
+      fns.views.push(fn);
     } else {
-      fns.override.push(fn);
+      fns.externals.push(fn);
     }
   }
 

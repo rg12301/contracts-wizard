@@ -36,6 +36,7 @@ export interface BaseFunction {
   returns?: FunctionArgument[];
   returnValue?: string;
   kind?: FunctionKind;
+  passthrough?: boolean;
 }
 
 export interface ContractFunction extends BaseFunction {

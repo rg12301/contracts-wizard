@@ -30,6 +30,13 @@ export function buildERC20(opts: ERC20Options): Contract {
 
   addBase(c, opts.name, opts.symbol);
 
+  c.addFunction(functions.name);
+  c.addFunction(functions.symbol);
+  c.addFunction(functions.totalSupply);
+  c.addFunction(functions.decimals);
+  c.addFunction(functions.balanceOf);
+  c.addFunction(functions.allowance);
+
   c.addFunction(functions.transfer);
   c.addFunction(functions.transferFrom);
   c.addFunction(functions.approve);
@@ -162,6 +169,74 @@ function addMintable(c: ContractBuilder, access: Access) {
 // }
 
 const functions = defineFunctions({
+
+  // --- view functions ---
+
+  name: {
+    module: 'ERC20',
+    kind: 'view' as const,
+    implicitArgs: withImplicitArgs(),
+    args: [
+    ],
+    returns: [{ name: 'name', type: 'felt' }],
+    passthrough: true,
+  },
+
+  symbol: {
+    module: 'ERC20',
+    kind: 'view' as const,
+    implicitArgs: withImplicitArgs(),
+    args: [
+    ],
+    returns: [{ name: 'symbol', type: 'felt' }],
+    passthrough: true,
+  },
+
+  totalSupply: {
+    module: 'ERC20',
+    kind: 'view' as const,
+    implicitArgs: withImplicitArgs(),
+    args: [
+    ],
+    returns: [{ name: 'totalSupply', type: 'Uint256' }],
+    passthrough: true,
+  },
+
+  decimals: {
+    module: 'ERC20',
+    kind: 'view' as const,
+    implicitArgs: withImplicitArgs(),
+    args: [
+    ],
+    returns: [{ name: 'decimals', type: 'felt' }],
+    passthrough: true,
+  },
+
+  balanceOf: {
+    module: 'ERC20',
+    kind: 'view' as const,
+    implicitArgs: withImplicitArgs(),
+    args: [
+      { name: 'account', type: 'felt' },
+    ],
+    returns: [{ name: 'balance', type: 'Uint256' }],
+    passthrough: true,
+  },
+
+  allowance: {
+    module: 'ERC20',
+    kind: 'view' as const,
+    implicitArgs: withImplicitArgs(),
+    args: [
+      { name: 'owner', type: 'felt' },
+      { name: 'spender', type: 'felt' },
+    ],
+    returns: [{ name: 'remaining', type: 'Uint256' }],
+    passthrough: true,
+  },
+
+  // --- external functions ---
+
   transfer: {
     module: 'ERC20',
     kind: 'external' as const,

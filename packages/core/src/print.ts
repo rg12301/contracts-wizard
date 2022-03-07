@@ -65,6 +65,10 @@ export function printContract(contract: Contract, opts?: Options): string {
       ],
       
       [
+        `# WARNING! This contains highly experimental code. Do not use in production.`
+      ],
+      
+      [
         `%lang starknet`
       ],
 

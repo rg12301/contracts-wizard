@@ -57,9 +57,9 @@ export function buildERC20(opts: ERC20Options): Contract {
   // c.addFunctionCode(`# Cairo equivalent to 'return (true)'`, functions.increaseAllowance);
   // c.addFunctionCode(`# Cairo equivalent to 'return (true)'`, functions.decreaseAllowance);
 
-  // if (opts.burnable) {
-  //   addBurnable(c);
-  // }
+  if (opts.burnable) {
+    addBurnable(c);
+  }
 
   // if (opts.snapshots) {
   //   addSnapshot(c, access);
@@ -112,12 +112,10 @@ function addBase(c: ContractBuilder, name: string, symbol: string) {
   c.addConstructorCode('ERC20_mint(recipient, initial_supply)');
 }
 
-// function addBurnable(c: ContractBuilder) {
-//   c.addParent({
-//     name: 'ERC20Burnable',
-//     path: 'contracts/token/ERC20/extensions/ERC20Burnable',
-//   });
-// }
+function addBurnable(c: ContractBuilder) {
+  c.addFunction(functions.burn);
+  c.addFunctionCode('# TODO add restriction to the above?', functions.burn);
+}
 
 // function addSnapshot(c: ContractBuilder, access: Access) {
 //   c.addParent({
@@ -320,6 +318,15 @@ const functions = defineFunctions({
     ],
   },
 
+  burn: {
+    module: 'ERC20',
+    kind: 'external' as const,
+    implicitArgs: withImplicitArgs(),
+    args: [
+      { name: 'account', type: 'felt' },
+      { name: 'amount', type: 'Uint256' },
+    ],
+  },
 
 
   // pause: {

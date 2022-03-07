@@ -78,7 +78,7 @@
         Useful for emergency response.
       </HelpTooltip>
     </label>
-
+<!-- 
     <label class:checked={opts.permit || opts.votes}>
       <input type="checkbox" bind:checked={opts.permit}>
       Permit
@@ -113,7 +113,7 @@
         <br>
         For on-chain voting, the Votes option is preferable.
       </HelpTooltip>
-    </label>
+    </label> -->
   </div>
 </section>
 

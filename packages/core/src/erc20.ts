@@ -12,11 +12,12 @@ export interface ERC20Options extends CommonOptions {
   burnable?: boolean;
   snapshots?: boolean;
   pausable?: boolean;
-  premint?: string;
+  premint?: number;
   mintable?: boolean;
   permit?: boolean;
   votes?: boolean;
   flashmint?: boolean;
+  decimals?: number;
 }
 
 export function buildERC20(opts: ERC20Options): Contract {
@@ -26,7 +27,7 @@ export function buildERC20(opts: ERC20Options): Contract {
 
   // TODO add imports for starkware common libraries without initializer
 
-  addBase(c, opts.name, opts.symbol);
+  addBase(c, opts.name, opts.symbol, opts.decimals ?? 18); // TODO define this default somewhere
 
   c.addFunction(functions.name);
   c.addFunction(functions.symbol);
@@ -69,9 +70,9 @@ export function buildERC20(opts: ERC20Options): Contract {
     addPausable(c, access, [functions.transfer, functions.transferFrom, functions.approve, functions.increaseAllowance, functions.decreaseAllowance]);
   }
 
-  // if (opts.premint) {
-  //   addPremint(c, opts.premint);
-  // }
+  if (opts.premint) {
+    addPremint(c, opts.premint, opts.decimals ?? 18); // TODO define this default somewhere
+  }
 
   if (opts.mintable) {
     addMintable(c, access);
@@ -97,19 +98,15 @@ export function buildERC20(opts: ERC20Options): Contract {
   return c;
 }
 
-function addBase(c: ContractBuilder, name: string, symbol: string) {
+function addBase(c: ContractBuilder, name: string, symbol: string, decimals: number) {
   c.addParentLibrary(
     {
       prefix: 'ERC20',
       modulePath: 'openzeppelin/token/erc20/library',
     },
-    [name, symbol, { lit:'decimals' }],
-    ['ERC20_transfer', 'ERC20_transferFrom', 'ERC20_approve', 'ERC20_increaseAllowance', 'ERC20_decreaseAllowance', `ERC20_initializer`, `ERC20_mint` ]
+    [name, symbol, decimals],
+    ['ERC20_transfer', 'ERC20_transferFrom', 'ERC20_approve', 'ERC20_increaseAllowance', 'ERC20_decreaseAllowance', `ERC20_initializer`]
   );
-  c.addConstructorArgument({ name:'decimals', type:'felt' });
-  c.addConstructorArgument({ name:'initial_supply', type:'Uint256' });
-  c.addConstructorArgument({ name:'recipient', type:'felt' });
-  c.addConstructorCode('ERC20_mint(recipient, initial_supply)');
 }
 
 function addBurnable(c: ContractBuilder) {
@@ -129,24 +126,39 @@ function addBurnable(c: ContractBuilder) {
 //   c.addFunctionCode('_snapshot();', functions.snapshot);
 // }
 
-// export const premintPattern = /^(\d*)(?:\.(\d+))?(?:e(\d+))?$/;
+export const premintPattern = /^(\d*)(?:\.(\d+))?(?:e(\d+))?$/;
 
-// function addPremint(c: ContractBuilder, amount: string) {
-//   const m = amount.match(premintPattern);
-//   if (m) {
-//     const integer = m[1]?.replace(/^0+/, '') ?? '';
-//     const decimals = m[2]?.replace(/0+$/, '') ?? '';
-//     const exponent = Number(m[3] ?? 0);
+function addPremint(c: ContractBuilder, amount: number, decimals: number) {
+  // const m = amount.match(premintPattern);
+  // if (m) {
+  //   const integer = m[1]?.replace(/^0+/, '') ?? '';
+  //   const decimals = m[2]?.replace(/0+$/, '') ?? '';
+  //   const exponent = Number(m[3] ?? 0);
 
-//     if (Number(integer + decimals) > 0) {
-//       const decimalPlace = decimals.length - exponent;
-//       const zeroes = new Array(Math.max(0, -decimalPlace)).fill('0').join('');
-//       const units = integer + decimals + zeroes;
-//       const exp = decimalPlace <= 0 ? 'decimals()' : `(decimals() - ${decimalPlace})`;
-//       c.addConstructorCode(`_mint(msg.sender, ${units} * 10 ** ${exp});`);
-//     }
-//   }
-// }
+  //   if (Number(integer + decimals) > 0) {
+  //     const decimalPlace = decimals.length - exponent;
+  //     const zeroes = new Array(Math.max(0, -decimalPlace)).fill('0').join('');
+  //     const units = integer + decimals + zeroes;
+  //     const exp = decimalPlace <= 0 ? 'decimals()' : `(decimals() - ${decimalPlace})`;
+  //     c.addConstructorArgument({ name:'recipient', type:'felt' });
+  //     c.addConstructorCode(`ERC20_mint(recipient, Uint256(${units} * 10 ** ${exp}, 0)`);
+  //   }
+  // }
+
+  if (amount !== undefined && amount !== 0) {
+    c.addConstructorArgument({ name:'recipient', type:'felt' });
+    c.addConstructorCode(`ERC20_mint(recipient, Uint256(${amount * Math.pow(10, decimals)}, 0))`); // TODO represent exponent in Cairo and/or handle floating point errors
+  }
+
+  c.addParentFunctionImport(
+    'ERC20',
+    `ERC20_mint`
+  );
+  // c.addConstructorArgument({ name:'decimals', type:'felt' });
+  // c.addConstructorArgument({ name:'initial_supply', type:'Uint256' });
+  // c.addConstructorArgument({ name:'recipient', type:'felt' });
+  // c.addConstructorCode('ERC20_mint(recipient, initial_supply)');
+}
 
 function addMintable(c: ContractBuilder, access: Access) {
   setAccessControl(c, functions.mint, access, 'MINTER');

@@ -116,6 +116,14 @@ export class ContractBuilder implements Contract {
     return !present;
   }
 
+  addParentFunctionImport(contractPrefix: string, addFunction: string) {
+    const existing = this.parentMap.get(contractPrefix);
+    if (existing === undefined) {
+      throw new Error(`Parent contract ${contractPrefix} has not been added yet`);
+    }
+    existing.functions.push(addFunction);
+  }
+
   addLibraryCall(modifier: string, baseFn: BaseFunction) {
     const fn = this.addFunction(baseFn);
     fn.libraryCalls.push(modifier);

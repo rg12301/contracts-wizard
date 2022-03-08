@@ -17,7 +17,7 @@ export function buildGeneral(opts: GeneralOptions): Contract {
   const fn = getGeneralFunction(opts.functionName);
   setAccessControl(c, fn, access, 'CUSTOM');
 
-  setUpgradeable(c, upgradeable, access);
+  setUpgradeable(c, upgradeable);//, access);
   
   setInfo(c, info);
 

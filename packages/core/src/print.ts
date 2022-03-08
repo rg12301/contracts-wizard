@@ -167,14 +167,14 @@ function printConstructor(contract: Contract, helpers: Helpers): Lines[] {
     const parents = contract.parents
       .filter(hasInitializer)
       .flatMap(p => printParentConstructor(p, helpers));
-    const modifiers = ['constructor'];
+    const modifiers = helpers.upgradeable ? ['external'] : ['constructor'];
+    const head = helpers.upgradeable ? 'func initializer' : 'func constructor';
     const args = contract.constructorArgs.map(a => printArgument(a, helpers));
     const implicitArgs = contract.constructorImplicitArgs?.map(a => printArgument(a, helpers));
     const body = spaceBetween(
         parents,
         contract.constructorCode,
       );
-    const head = 'func constructor';
 
     const constructor = printFunction2(
       head,
@@ -185,17 +185,7 @@ function printConstructor(contract: Contract, helpers: Helpers): Lines[] {
       undefined,
       body,
     );
-    if (!helpers.upgradeable) {
-      return constructor;
-    } else {
-      return spaceBetween(
-        [
-          '/// @custom:oz-upgrades-unsafe-allow constructor',
-          'constructor() initializer {}',
-        ],
-        constructor,
-      );
-    }
+    return constructor;
   } else {
     return [];
   }

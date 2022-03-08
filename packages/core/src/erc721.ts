@@ -50,7 +50,7 @@ export function buildERC721(opts: ERC721Options): Contract {
   //   addMintable(c, access, opts.incremental, opts.uriStorage);
   // }
 
-  setUpgradeable(c, upgradeable, access);
+  setUpgradeable(c, upgradeable);//, access);
 
   setInfo(c, info);
 

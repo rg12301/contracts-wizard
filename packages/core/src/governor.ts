@@ -68,7 +68,7 @@ export function buildGovernor(opts: GovernorOptions): Contract {
   // addQuorum(c, allOpts);
   // addTimelock(c, allOpts);
 
-  setUpgradeable(c, allOpts.upgradeable, allOpts.access);
+  setUpgradeable(c, allOpts.upgradeable);//, allOpts.access);
 
   setInfo(c, allOpts.info);
 

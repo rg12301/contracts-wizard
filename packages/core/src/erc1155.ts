@@ -40,7 +40,7 @@ export function buildERC1155(opts: ERC1155Options): Contract {
   //   addSupply(c);
   // }
 
-  setUpgradeable(c, upgradeable, access);
+  setUpgradeable(c, upgradeable);//, access);
 
   setInfo(c, info);
 

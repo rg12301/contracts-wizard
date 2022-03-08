@@ -91,7 +91,7 @@ export function buildERC20(opts: ERC20Options): Contract {
   //   addFlashMint(c);
   // }
 
-  setUpgradeable(c, upgradeable, access);
+  setUpgradeable(c, upgradeable); //, access);
   
   setInfo(c, info);
 
@@ -111,7 +111,7 @@ function addBase(c: ContractBuilder, name: string, symbol: string, decimals: num
 
 function addBurnable(c: ContractBuilder) {
   c.addFunction(functions.burn);
-  c.addFunctionCode('# TODO restrict the above', functions.burn);
+  c.addFunctionCode('# TODO restrict the above?', functions.burn);
 }
 
 // function addSnapshot(c: ContractBuilder, access: Access) {

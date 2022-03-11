@@ -10,8 +10,7 @@ export function addPausable(c: ContractBuilder, access: Access, pausableFns: Bas
   }, [], ['Pausable_pause', 'Pausable_unpause', 'Pausable_when_not_paused']);
 
   for (const fn of pausableFns) {
-    // TODO add these base functions to parent imports automatically
-    c.addLibraryCall('Pausable_when_not_paused()', fn);
+    setPausable(c, fn);
   }
 
   c.addFunction(functions.paused);
@@ -57,3 +56,8 @@ const functions = defineFunctions({
   //   args: [],
   // },
 });
+
+export function setPausable(c: ContractBuilder, fn: BaseFunction) {
+    // TODO add these base functions to parent imports automatically
+    c.addLibraryCall('Pausable_when_not_paused()', fn);
+}

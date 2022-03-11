@@ -1,6 +1,6 @@
 import { Contract, ContractBuilder } from './contract';
 import { Access, setAccessControl } from './set-access-control';
-import { addPausable } from './add-pausable';
+import { addPausable, setPausable } from './add-pausable';
 import { defineFunctions } from './utils/define-functions';
 import { CommonOptions, withCommonDefaults, withImplicitArgs } from './common-options';
 import { setUpgradeable } from './set-upgradeable';
@@ -44,7 +44,7 @@ export function buildERC20(opts: ERC20Options): Contract {
 
   c.addParentLibrary(
     {
-      prefix: '',
+      prefix: 'constants', // TODO add an import (rather than a parent library) to a map without relying on prefix, since prefix does not make sense in context of some libs such as utils
       modulePath: 'openzeppelin.utils.constants',
     },
     [],
@@ -68,6 +68,9 @@ export function buildERC20(opts: ERC20Options): Contract {
 
   if (opts.pausable) {
     addPausable(c, access, [functions.transfer, functions.transferFrom, functions.approve, functions.increaseAllowance, functions.decreaseAllowance]);
+    if (opts.burnable) {
+      setPausable(c, functions.burn);
+    }
   }
 
   if (opts.premint) {
@@ -110,6 +113,15 @@ function addBase(c: ContractBuilder, name: string, symbol: string, decimals: num
 }
 
 function addBurnable(c: ContractBuilder) {
+  c.addParentLibrary(
+    {
+      prefix: 'syscalls', // TODO add an import (rather than a parent library) to a map without relying on prefix, since prefix does not make sense in context of some libs such as utils
+      modulePath: 'starkware.starknet.common.syscalls',
+    },
+    [],
+    ['get_caller_address'],
+    false
+  ); 
   c.addFunction(functions.burn);
   c.setFunctionBody(
     ['let (owner) = get_caller_address()', 'ERC20_burn(owner, amount)'],

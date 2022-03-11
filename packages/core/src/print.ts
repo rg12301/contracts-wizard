@@ -284,20 +284,20 @@ function printFunction(fn: ContractFunction, helpers: Helpers): Lines[] {
 
   const returnArgs = fn.returns?.map(a => typeof a === 'string' ? a : a.name);
 
-  if (!fn.final) {
-    // TODO
-    fn.libraryCalls.forEach(library => {
-      const libraryCall = `${library}`;
-      code.push(libraryCall);
-    });
+  // TODO
+  fn.libraryCalls.forEach(library => {
+    const libraryCall = `${library}`;
+    code.push(libraryCall);
+  });
 
+  if (!fn.final) {
     const parentFunctionCall = fn.read ? 
     `${fn.module}_${fn.name}.read()` :
     `${fn.module}_${fn.name}(${fn.args.map(a => a.name).join(', ')})`;
     const callParentLine = fn.passthrough ? `let (${returnArgs}) = ${parentFunctionCall}` : `${parentFunctionCall}`;
     code.push(callParentLine);
   }
-  
+
   code.push(...fn.code);
 
   const returnVariables = fn.returnValue ? [fn.returnValue] : returnArgs;

@@ -111,7 +111,10 @@ function addBase(c: ContractBuilder, name: string, symbol: string, decimals: num
 
 function addBurnable(c: ContractBuilder) {
   c.addFunction(functions.burn);
-  c.addFunctionCode('# TODO restrict the above?', functions.burn);
+  c.setFunctionBody(
+    ['let (owner) = get_caller_address()', 'ERC20_burn(owner, amount)'],
+     functions.burn
+  );
 }
 
 // function addSnapshot(c: ContractBuilder, access: Access) {
@@ -335,7 +338,7 @@ const functions = defineFunctions({
     kind: 'external' as const,
     implicitArgs: withImplicitArgs(),
     args: [
-      { name: 'account', type: 'felt' },
+      // { name: 'account', type: 'felt' },
       { name: 'amount', type: 'Uint256' },
     ],
   },

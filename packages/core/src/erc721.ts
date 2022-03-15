@@ -1,6 +1,6 @@
 import { BaseFunction, Contract, ContractBuilder } from './contract';
- import { Access, setAccessControl } from './set-access-control';
-// import { addPausable } from './add-pausable';
+import { Access, setAccessControl } from './set-access-control';
+import { addPausable, setPausable } from './add-pausable';
 // import { supportsInterface } from './common-functions';
 import { defineFunctions } from './utils/define-functions';
 import { CommonOptions, withCommonDefaults, withImplicitArgs } from './common-options';
@@ -45,6 +45,12 @@ export function buildERC721(opts: ERC721Options): Contract {
   c.addFunction(functions.isApprovedForAll);
   c.addFunction(functions.tokenURI);
 
+  c.addFunction(functions.approve);
+  c.addFunction(functions.setApprovalForAll);
+  c.addFunction(functions.transferFrom);
+  c.addFunction(functions.safeTransferFrom);
+  c.addFunction(functions.setTokenURI);
+
   // if (opts.baseUri) {
   //   addBaseURI(c, opts.baseUri);
   // }
@@ -57,9 +63,15 @@ export function buildERC721(opts: ERC721Options): Contract {
   //   addURIStorage(c);
   // }
 
-  // if (opts.pausable) {
-  //   addPausable(c, access, [functions._beforeTokenTransfer]);
-  // }
+  if (opts.pausable) {
+    addPausable(c, access, [functions.approve, functions.setApprovalForAll, functions.transferFrom, functions.safeTransferFrom]);
+    if (opts.burnable) {
+      setPausable(c, functions.burn);
+    }
+    if (opts.mintable) {
+      setPausable(c, functions.mint);
+    }
+  }
 
   if (opts.burnable) {
     addBurnable(c);
@@ -275,6 +287,61 @@ function addMintable(c: ContractBuilder, access: Access) {
   },
 
   // --- external functions ---
+
+
+  approve: {
+    module: 'ERC721',
+    kind: 'external' as const,
+    implicitArgs: withImplicitArgs(),
+    args: [
+      { name: 'to', type: 'felt' },
+      { name: 'tokenId', type: 'Uint256' },
+    ],
+  },
+
+  setApprovalForAll: {
+    module: 'ERC721',
+    kind: 'external' as const,
+    implicitArgs: withImplicitArgs(),
+    args: [
+      { name: 'operator', type: 'felt' },
+      { name: 'approved', type: 'felt' },
+    ],
+  },
+
+  transferFrom: {
+    module: 'ERC721',
+    kind: 'external' as const,
+    implicitArgs: withImplicitArgs(),
+    args: [
+      { name: '_from', type: 'felt' },
+      { name: 'to', type: 'felt' },
+      { name: 'tokenId', type: 'Uint256' },
+    ],
+  },
+
+  safeTransferFrom: {
+    module: 'ERC721',
+    kind: 'external' as const,
+    implicitArgs: withImplicitArgs(),
+    args: [
+      { name: '_from', type: 'felt' },
+      { name: 'to', type: 'felt' },
+      { name: 'tokenId', type: 'Uint256' },
+      { name: 'data_len', type: 'felt' },
+      { name: 'data', type: 'felt' },
+    ],
+  },
+
+  setTokenURI: {
+    module: 'ERC721',
+    kind: 'external' as const,
+    implicitArgs: withImplicitArgs(),
+    args: [
+      { name: 'tokenId', type: 'Uint256' },
+      { name: 'tokenURI', type: 'felt' },
+    ],
+  },
 
   mint: {
     module: 'ERC721',

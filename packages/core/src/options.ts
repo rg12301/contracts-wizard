@@ -36,7 +36,7 @@ export interface Helpers extends Required<Options> {
 
 export function withHelpers(contract: Contract, opts: Options = {}): Helpers {
   const upgradeable = contract.upgradeable;
-  const transformName = (n: string) => upgradeable ? upgradeableName(n) : n;
+  const transformName = (n: string) => n; //upgradeable ? upgradeableName(n) : n;
   return {
     upgradeable,
     transformName,

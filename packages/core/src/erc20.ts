@@ -176,7 +176,7 @@ function addPremint(c: ContractBuilder, amount: number, decimals: number) {
 }
 
 function addMintable(c: ContractBuilder, access: Access) {
-  setAccessControl(c, functions.mint, access, 'MINTER');
+  setAccessControl(c, functions.mint, access);
   //c.addFunctionCode('_mint(to, amount);', functions.mint);
 }
 

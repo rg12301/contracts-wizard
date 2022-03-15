@@ -26,15 +26,15 @@ export function buildERC721(opts: ERC721Options): Contract {
 
   addBase(c, opts.name, opts.symbol);
 
-  // c.addParentLibrary(
-  //   {
-  //     prefix: 'ERC165', // TODO add an import (rather than a parent library) to a map without relying on prefix, since prefix does not make sense in context of some libs such as utils
-  //     modulePath: 'openzeppelin.introspection.ERC165',
-  //   },
-  //   [],
-  //   ['ERC165_supports_interface'],
-  //   false
-  // );
+  c.addParentLibrary(
+    {
+      prefix: 'ERC165', // TODO add an import (rather than a parent library) to a map without relying on prefix, since prefix does not make sense in context of some libs such as utils
+      modulePath: 'openzeppelin.introspection.ERC165',
+    },
+    [],
+    ['ERC165_supports_interface'],
+    false
+  );
   c.addFunction(functions.supports_interface);
 
   c.addFunction(functions.name);
@@ -49,6 +49,8 @@ export function buildERC721(opts: ERC721Options): Contract {
   c.addFunction(functions.setApprovalForAll);
   c.addFunction(functions.transferFrom);
   c.addFunction(functions.safeTransferFrom);
+
+  setAccessControl(c, functions.setTokenURI, access);
   c.addFunction(functions.setTokenURI);
 
   // if (opts.baseUri) {
@@ -162,7 +164,7 @@ function addBurnable(c: ContractBuilder) {
 // }
 
 function addMintable(c: ContractBuilder, access: Access) {
-  setAccessControl(c, functions.mint, access, 'MINTER');
+  setAccessControl(c, functions.mint, access);
   //c.addFunctionCode('_mint(to, amount);', functions.mint);
 }
 

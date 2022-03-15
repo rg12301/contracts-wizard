@@ -1,5 +1,5 @@
 import { BaseFunction, Contract, ContractBuilder } from './contract';
-// import { Access, setAccessControl } from './set-access-control';
+ import { Access, setAccessControl } from './set-access-control';
 // import { addPausable } from './add-pausable';
 // import { supportsInterface } from './common-functions';
 import { defineFunctions } from './utils/define-functions';
@@ -61,13 +61,13 @@ export function buildERC721(opts: ERC721Options): Contract {
   //   addPausable(c, access, [functions._beforeTokenTransfer]);
   // }
 
-  // if (opts.burnable) {
-  //   addBurnable(c);
-  // }
+  if (opts.burnable) {
+    addBurnable(c);
+  }
 
-  // if (opts.mintable) {
-  //   addMintable(c, access, opts.incremental, opts.uriStorage);
-  // }
+  if (opts.mintable) {
+    addMintable(c, access);//, opts.incremental, opts.uriStorage);
+  }
 
   setUpgradeable(c, upgradeable);//, access);
 
@@ -127,12 +127,32 @@ function addBase(c: ContractBuilder, name: string, symbol: string) {
 //   c.addOverride('ERC721URIStorage', functions.tokenURI);
 // }
 
+
+
+function addBurnable(c: ContractBuilder) {
+  c.addFunction(functions.burn);
+  c.addParentFunctionImport(
+    // TODO have a way when defining the function to specify that this has multiple "base" functions (e.g. multiple parents)
+    'ERC721',
+    'ERC721_only_token_owner',
+  );
+  c.setFunctionBody(
+    ['ERC721_only_token_owner(tokenId)', 'ERC721_burn(tokenId)'],
+     functions.burn
+  );
+}
+
 // function addBurnable(c: ContractBuilder) {
 //   c.addParent({
 //     name: 'ERC721Burnable',
 //     path: 'openzeppelin/contracts/token/ERC721/extensions/ERC721Burnable',
 //   });
 // }
+
+function addMintable(c: ContractBuilder, access: Access) {
+  setAccessControl(c, functions.mint, access, 'MINTER');
+  //c.addFunctionCode('_mint(to, amount);', functions.mint);
+}
 
 // function addMintable(c: ContractBuilder, access: Access, incremental = false, uriStorage = false) {
 //   const fn = getMintFunction(incremental, uriStorage);
@@ -252,6 +272,27 @@ function addBase(c: ContractBuilder, name: string, symbol: string) {
     ],
     returns: [{ name: 'tokenURI', type: 'felt' }],
     passthrough: true,
+  },
+
+  // --- external functions ---
+
+  mint: {
+    module: 'ERC721',
+    kind: 'external' as const,
+    implicitArgs: withImplicitArgs(),
+    args: [
+      { name: 'to', type: 'felt' },
+      { name: 'tokenId', type: 'Uint256' },
+    ],
+  },
+
+  burn: {
+    module: 'ERC721',
+    kind: 'external' as const,
+    implicitArgs: withImplicitArgs(),
+    args: [
+      { name: 'tokenId', type: 'Uint256' },
+    ],
   },
 
 });

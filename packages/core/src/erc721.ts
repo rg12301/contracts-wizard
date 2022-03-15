@@ -43,15 +43,11 @@ export function buildERC721(opts: ERC721Options): Contract {
   c.addFunction(functions.ownerOf);
   c.addFunction(functions.getApproved);
   c.addFunction(functions.isApprovedForAll);
-  c.addFunction(functions.tokenURI);
 
   c.addFunction(functions.approve);
   c.addFunction(functions.setApprovalForAll);
   c.addFunction(functions.transferFrom);
   c.addFunction(functions.safeTransferFrom);
-
-  setAccessControl(c, functions.setTokenURI, access);
-  c.addFunction(functions.setTokenURI);
 
   // if (opts.baseUri) {
   //   addBaseURI(c, opts.baseUri);
@@ -61,9 +57,9 @@ export function buildERC721(opts: ERC721Options): Contract {
   //   addEnumerable(c);
   // }
 
-  // if (opts.uriStorage) {
-  //   addURIStorage(c);
-  // }
+  if (opts.uriStorage) {
+    addURIStorage(c, access);
+  }
 
   if (opts.pausable) {
     addPausable(c, access, [functions.approve, functions.setApprovalForAll, functions.transferFrom, functions.safeTransferFrom]);
@@ -131,15 +127,20 @@ function addBase(c: ContractBuilder, name: string, symbol: string) {
 //   c.addOverride('ERC721Enumerable', supportsInterface);
 // }
 
-// function addURIStorage(c: ContractBuilder) {
-//   c.addParent({
-//     name: 'ERC721URIStorage',
-//     path: 'openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage',
-//   });
+function addURIStorage(c: ContractBuilder, access: Access) {
+  c.addFunction(functions.tokenURI);
+  setAccessControl(c, functions.setTokenURI, access);
+  c.addFunction(functions.setTokenURI);
 
-//   c.addOverride('ERC721URIStorage', functions._burn);
-//   c.addOverride('ERC721URIStorage', functions.tokenURI);
-// }
+
+  // c.addParent({
+  //   name: 'ERC721URIStorage',
+  //   path: 'openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage',
+  // });
+
+  // c.addOverride('ERC721URIStorage', functions._burn);
+  // c.addOverride('ERC721URIStorage', functions.tokenURI);
+}
 
 
 
@@ -354,7 +355,7 @@ function addMintable(c: ContractBuilder, access: Access) {
       { name: 'tokenId', type: 'Uint256' },
     ],
   },
-
+  
   burn: {
     module: 'ERC721',
     kind: 'external' as const,

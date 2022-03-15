@@ -55,13 +55,13 @@
       <input bind:value={opts.symbol}>
     </label>
   </div>
-  <label class="labeled-input">
+  <!-- <label class="labeled-input">
     <span class="flex justify-between pr-2">
       Base URI
       <HelpTooltip>Will be concatenated with token IDs to generate the token URIs.</HelpTooltip>
     </span>
     <input bind:value={opts.baseUri} placeholder="https://...">
-  </label>
+  </label> -->
 </section>
 
 <section class="controls-section">

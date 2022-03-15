@@ -93,7 +93,8 @@ function addBase(c: ContractBuilder, name: string, symbol: string) {
       modulePath: 'openzeppelin/token/erc721/library',
     },
     [name, symbol],
-    ['ERC721_approve', 'ERC721_setApprovalForAll', 'ERC721_transferFrom', 'ERC721_safeTransferFrom', ]
+    ['ERC721_approve', 'ERC721_setApprovalForAll', 'ERC721_transferFrom', 'ERC721_safeTransferFrom', 'ERC721_initializer', ],
+    // TODO use initializable boolean to determine if parent initializer is imported
   );
 }
 
@@ -332,7 +333,7 @@ function addMintable(c: ContractBuilder, access: Access) {
       { name: 'to', type: 'felt' },
       { name: 'tokenId', type: 'Uint256' },
       { name: 'data_len', type: 'felt' },
-      { name: 'data', type: 'felt' },
+      { name: 'data', type: 'felt*' },
     ],
   },
 

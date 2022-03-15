@@ -108,7 +108,8 @@ function addBase(c: ContractBuilder, name: string, symbol: string, decimals: num
       modulePath: 'openzeppelin/token/erc20/library',
     },
     [name, symbol, decimals],
-    ['ERC20_transfer', 'ERC20_transferFrom', 'ERC20_approve', 'ERC20_increaseAllowance', 'ERC20_decreaseAllowance', `ERC20_initializer`]
+    ['ERC20_transfer', 'ERC20_transferFrom', 'ERC20_approve', 'ERC20_increaseAllowance', 'ERC20_decreaseAllowance', 'ERC20_initializer'],
+    // TODO use initializable boolean to determine if parent initializer is imported
   );
 }
 

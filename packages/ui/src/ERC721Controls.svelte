@@ -75,13 +75,13 @@
         Privileged accounts will be able to emit new tokens.
       </HelpTooltip>
     </label>
-    <label class:checked={opts.incremental} class="subcontrol">
+    <!-- <label class:checked={opts.incremental} class="subcontrol">
       <input type="checkbox" bind:checked={opts.incremental}>
       Auto Increment Ids
       <HelpTooltip>
         New tokens will be automatically assigned an incremental id.
       </HelpTooltip>
-    </label>
+    </label> -->
     <label class:checked={opts.burnable}>
       <input type="checkbox" bind:checked={opts.burnable}>
       Burnable
@@ -97,13 +97,13 @@
         Useful for emergency response.
       </HelpTooltip>
     </label>
-    <label class:checked={opts.enumerable}>
+    <!-- <label class:checked={opts.enumerable}>
       <input type="checkbox" bind:checked={opts.enumerable}>
       Enumerable
       <HelpTooltip link="https://docs.openzeppelin.com/contracts/4.x/api/token/erc721#ERC721Enumerable">
         Allows on-chain enumeration of all tokens or those owned by an account. Increases gas cost of transfers.
       </HelpTooltip>
-    </label>
+    </label> -->
     <label class:checked={opts.uriStorage}>
       <input type="checkbox" bind:checked={opts.uriStorage}>
       URI Storage

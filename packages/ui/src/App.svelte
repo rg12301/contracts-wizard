@@ -103,10 +103,10 @@
         <button class:selected={tab === 'ERC20'} on:click={() => tab = 'ERC20'}>
           ERC20
         </button>
-        <!-- <button class:selected={tab === 'ERC721'} on:click={() => tab = 'ERC721'}>
+        <button class:selected={tab === 'ERC721'} on:click={() => tab = 'ERC721'}>
           ERC721
         </button>
-        <button class:selected={tab === 'ERC1155'} on:click={() => tab = 'ERC1155'}>
+        <!--<button class:selected={tab === 'ERC1155'} on:click={() => tab = 'ERC1155'}>
           ERC1155
         </button>
         <button class:selected={tab === 'Governor'} on:click={() => tab = 'Governor'}>

@@ -3,7 +3,7 @@ import { BaseFunction, Contract, ContractBuilder } from './contract';
 // import { addPausable } from './add-pausable';
 // import { supportsInterface } from './common-functions';
 import { defineFunctions } from './utils/define-functions';
-import { CommonOptions, withCommonDefaults } from './common-options';
+import { CommonOptions, withCommonDefaults, withImplicitArgs } from './common-options';
 import { setUpgradeable } from './set-upgradeable';
 import { setInfo } from './set-info';
 
@@ -24,7 +24,26 @@ export function buildERC721(opts: ERC721Options): Contract {
 
   const { access, upgradeable, info } = withCommonDefaults(opts);
 
-  // addBase(c, opts.name, opts.symbol);
+  addBase(c, opts.name, opts.symbol);
+
+  // c.addParentLibrary(
+  //   {
+  //     prefix: 'ERC165', // TODO add an import (rather than a parent library) to a map without relying on prefix, since prefix does not make sense in context of some libs such as utils
+  //     modulePath: 'openzeppelin.introspection.ERC165',
+  //   },
+  //   [],
+  //   ['ERC165_supports_interface'],
+  //   false
+  // );
+  c.addFunction(functions.supports_interface);
+
+  c.addFunction(functions.name);
+  c.addFunction(functions.symbol);
+  c.addFunction(functions.balanceOf);
+  c.addFunction(functions.ownerOf);
+  c.addFunction(functions.getApproved);
+  c.addFunction(functions.isApprovedForAll);
+  c.addFunction(functions.tokenURI);
 
   // if (opts.baseUri) {
   //   addBaseURI(c, opts.baseUri);
@@ -55,6 +74,17 @@ export function buildERC721(opts: ERC721Options): Contract {
   setInfo(c, info);
 
   return c;
+}
+
+function addBase(c: ContractBuilder, name: string, symbol: string) {
+  c.addParentLibrary(
+    {
+      prefix: 'ERC721',
+      modulePath: 'openzeppelin/token/erc721/library',
+    },
+    [name, symbol],
+    ['ERC721_approve', 'ERC721_setApprovalForAll', 'ERC721_transferFrom', 'ERC721_safeTransferFrom', ]
+  );
 }
 
 // function addBase(c: ContractBuilder, name: string, symbol: string) {
@@ -126,39 +156,105 @@ export function buildERC721(opts: ERC721Options): Contract {
 //   }
 // }
 
-// const functions = defineFunctions({
-//   _beforeTokenTransfer: {
-//     kind: 'internal' as const,
-//     args: [
-//       { name: 'from', type: 'address' },
-//       { name: 'to', type: 'address' },
-//       { name: 'tokenId', type: 'uint256' },
-//     ],
-//   },
 
-//   _burn: {
-//     kind: 'internal' as const,
-//     args: [
-//       { name: 'tokenId', type: 'uint256' },
-//     ],
-//   },
 
-//   tokenURI: {
-//     kind: 'external' as const,
-//     args: [
-//       { name: 'tokenId', type: 'uint256' },
-//     ],
-//     returns: ['string memory'],
-//     mutability: 'view' as const,
-//   },
 
-//   _baseURI: {
-//     kind: 'internal' as const,
-//     args: [],
-//     returns: ['string memory'],
-//     mutability: 'pure' as const,
-//   },
-// });
+
+ const functions = defineFunctions({
+
+
+  // --- view functions ---
+
+
+  supports_interface: {
+    module: 'ERC165',
+    kind: 'view' as const,
+    implicitArgs: withImplicitArgs(),
+    args: [
+      { name: 'interfaceId', type: 'felt' },
+    ],
+    returns: [{ name: 'success', type: 'felt' }],
+    passthrough: true,
+    // TODO support different library function name, and remove adding separate import
+  },
+
+  name: {
+    module: 'ERC721',
+    kind: 'view' as const,
+    implicitArgs: withImplicitArgs(),
+    args: [
+    ],
+    returns: [{ name: 'name', type: 'felt' }],
+    passthrough: true,
+  },
+
+  symbol: {
+    module: 'ERC721',
+    kind: 'view' as const,
+    implicitArgs: withImplicitArgs(),
+    args: [
+    ],
+    returns: [{ name: 'symbol', type: 'felt' }],
+    passthrough: true,
+  },
+
+  balanceOf: {
+    module: 'ERC721',
+    kind: 'view' as const,
+    implicitArgs: withImplicitArgs(),
+    args: [
+      { name: 'owner', type: 'felt' },
+    ],
+    returns: [{ name: 'balance', type: 'Uint256' }],
+    passthrough: true,
+  },
+
+  ownerOf: {
+    module: 'ERC721',
+    kind: 'view' as const,
+    implicitArgs: withImplicitArgs(),
+    args: [
+      { name: 'token_id', type: 'Uint256' },
+    ],
+    returns: [{ name: 'owner', type: 'felt' }],
+    passthrough: true,
+  },
+
+  getApproved: {
+    module: 'ERC721',
+    kind: 'view' as const,
+    implicitArgs: withImplicitArgs(),
+    args: [
+      { name: 'token_id', type: 'Uint256' },
+    ],
+    returns: [{ name: 'approved', type: 'felt' }],
+    passthrough: true,
+  },
+
+  isApprovedForAll: {
+    module: 'ERC721',
+    kind: 'view' as const,
+    implicitArgs: withImplicitArgs(),
+    args: [
+      { name: 'owner', type: 'felt' },
+      { name: 'operator', type: 'felt' },
+    ],
+    returns: [{ name: 'isApproved', type: 'felt' }],
+    passthrough: true,
+  },
+
+  tokenURI: {
+    module: 'ERC721',
+    kind: 'view' as const,
+    implicitArgs: withImplicitArgs(),
+    args: [
+      { name: 'tokenId', type: 'Uint256' },
+    ],
+    returns: [{ name: 'tokenURI', type: 'felt' }],
+    passthrough: true,
+  },
+
+});
 
 // function getMintFunction(incremental: boolean, uriStorage: boolean) {
 //   const fn = {

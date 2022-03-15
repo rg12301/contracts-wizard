@@ -164,7 +164,7 @@ function addBurnable(c: ContractBuilder) {
 // }
 
 function addMintable(c: ContractBuilder, access: Access) {
-  setAccessControl(c, functions.mint, access);
+  setAccessControl(c, functions.mint, access, 'MINTER');
   //c.addFunctionCode('_mint(to, amount);', functions.mint);
 }
 

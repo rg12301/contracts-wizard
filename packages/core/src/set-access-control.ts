@@ -5,7 +5,7 @@ export const accessOptions = ['ownable', 'roles'] as const;
 
 export type Access = typeof accessOptions[number];
 
-export function setAccessControl(c: ContractBuilder, fn: BaseFunction, access: Access) {
+export function setAccessControl(c: ContractBuilder, fn: BaseFunction, access: Access, role?: string) {
   switch (access) {
     case 'ownable': {
       // c.addLibraryFunction(parents.Ownable, function)

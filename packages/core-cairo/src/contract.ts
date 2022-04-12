@@ -1,4 +1,6 @@
 import { withImplicitArgs } from './common-options';
+import { defineFunctions } from './utils/define-functions';
+import { defineModules } from './utils/define-modules';
 import { getFunctionName } from './utils/module-prefix';
 import { toIdentifier } from './utils/to-identifier';
 
@@ -80,6 +82,35 @@ export class ContractBuilder implements Contract {
   // TODO create a list of modules
   // in addParentLibrary, lookup from list
 
+
+  constructor() {
+    const modules = defineModules( {
+      cairo_builtins: {
+        path: 'starkware.cairo.common.cairo_builtins',
+        usePrefix: false
+      },
+    
+      uint256: {
+        path: 'starkware.cairo.common.uint256',
+        usePrefix: false
+      },
+    })
+
+    const functions = defineFunctions({
+      HashBuiltin: {
+        module: modules.cairo_builtins,
+        args: [],
+      },
+
+      Uint256: {
+        module: modules.uint256,
+        args: [],
+      },
+    })
+
+    this.addModule(modules.cairo_builtins, [], [functions.HashBuiltin], false);
+    this.addModule(modules.uint256, [], [functions.Uint256], false);
+  }
 
   get libraries(): Library[] {
     return [...this.parentMap.values()].sort((a, b) => {

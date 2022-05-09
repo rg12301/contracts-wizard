@@ -3,24 +3,15 @@
 
   import type { KindedOptions, OptionsErrorMessages } from 'core-cairo'
 ;
-  import { premintPattern, infoDefaults } from 'core-cairo';
+  import { premintPattern, erc20defaults } from 'core-cairo';
 
   import UpgradeabilitySection from './UpgradeabilitySection.svelte';
   import InfoSection from './InfoSection.svelte';
   import { error } from '../error-tooltip';
 
   export const opts: Required<KindedOptions['ERC20']> = {
-    kind: 'ERC20',
-    name: 'MyToken',
-    symbol: 'MTK',
-    burnable: false,
-    pausable: false,
-    premint: '',
-    decimals: '18',
-    mintable: false,
-    access: 'ownable',
-    upgradeable: false,
-    info: { ...infoDefaults },
+    ...erc20defaults,
+    premint: '', // default to empty premint in UI instead of 0
   };
 
   export let errors: undefined | OptionsErrorMessages;

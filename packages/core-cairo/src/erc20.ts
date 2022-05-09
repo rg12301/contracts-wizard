@@ -8,13 +8,20 @@ import { setInfo } from './set-info';
 import { OptionsError } from './error';
 import BN from 'bn.js';
 import { defineModules } from './utils/define-modules';
+import { infoDefaults, KindedOptions } from '.';
 
-export const defaults = {
+export const defaults: Required<KindedOptions['ERC20']> = {
+  kind: 'ERC20',
+  name: 'MyToken',
+  symbol: 'MTK',
   burnable: false,
   pausable: false,
   premint: '0',
-  mintable: false,
   decimals: '18',
+  mintable: false,
+  access: 'ownable',
+  upgradeable: false,
+  info: { ...infoDefaults },
 } as const;
 
 export interface ERC20Options extends CommonOptions {

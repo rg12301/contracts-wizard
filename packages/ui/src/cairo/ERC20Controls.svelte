@@ -15,7 +15,7 @@
     symbol: 'MTK',
     burnable: false,
     pausable: false,
-    premint: '0',
+    premint: '',
     decimals: '18',
     mintable: false,
     access: 'ownable',

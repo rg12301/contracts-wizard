@@ -8,7 +8,8 @@ import { setInfo } from './set-info';
 import { OptionsError } from './error';
 import BN from 'bn.js';
 import { defineModules } from './utils/define-modules';
-import { infoDefaults, KindedOptions } from '.';
+import type { KindedOptions } from './build-generic';
+import { defaults as infoDefaults } from './set-info';
 
 export const defaults: Required<KindedOptions['ERC20']> = {
   kind: 'ERC20',

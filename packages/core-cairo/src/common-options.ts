@@ -1,13 +1,13 @@
-import { infoDefaults } from ".";
 import type { Argument } from "./contract";
 import type { Access } from "./set-access-control";
 import type { Info } from "./set-info";
+import { defaults as infoDefaults } from "./set-info";
 import type { Upgradeable } from "./set-upgradeable";
 
 export const defaults: Required<CommonOptions> = {
   access: 'ownable',
   upgradeable: false,
-  info: { ...infoDefaults },
+  info: infoDefaults,
 } as const;
 
 export interface CommonOptions {

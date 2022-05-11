@@ -10,7 +10,8 @@ export type { Access } from './set-access-control';
 export type { Upgradeable } from './set-upgradeable';
 export type { Info } from './set-info';
 
-export { premintPattern, defaults as erc20defaults } from './erc20';
+export { premintPattern, defaults as erc20defaults, printERC20 } from './erc20';
+export { printERC721 } from './erc721';
 
 export { defaults as infoDefaults } from './set-info';
 
@@ -21,5 +22,3 @@ export type { Kind } from './kind';
 export { sanitizeKind } from './kind';
 
 export { contractsVersion } from './utils/version';
-
-export { printERC20, printERC721 } from './api';

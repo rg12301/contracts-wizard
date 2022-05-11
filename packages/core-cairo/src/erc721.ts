@@ -6,6 +6,11 @@ import { CommonOptions, withCommonDefaults, withImplicitArgs } from './common-op
 import { setUpgradeable } from './set-upgradeable';
 import { setInfo } from './set-info';
 import { defineModules } from './utils/define-modules';
+import { printContract } from './print';
+
+export function printERC721(opts: ERC721Options): string {
+  return printContract(buildERC721(opts));
+}
 
 export interface ERC721Options extends CommonOptions {
   name: string;

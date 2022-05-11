@@ -9,6 +9,7 @@ import { OptionsError } from './error';
 import BN from 'bn.js';
 import { defineModules } from './utils/define-modules';
 import { defaults as infoDefaults } from './set-info';
+import { printContract } from './print';
 
 export const defaults: Required<ERC20Options> = {
   name: 'MyToken',
@@ -22,6 +23,10 @@ export const defaults: Required<ERC20Options> = {
   upgradeable: false,
   info: { ...infoDefaults },
 } as const;
+
+export function printERC20(opts: ERC20Options): string {
+  return printContract(buildERC20(opts));
+}
 
 export interface ERC20Options extends CommonOptions {
   name: string;

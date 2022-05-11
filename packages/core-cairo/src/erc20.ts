@@ -8,7 +8,7 @@ import { setInfo } from './set-info';
 import { OptionsError } from './error';
 import BN from 'bn.js';
 import { defineModules } from './utils/define-modules';
-import { defaults as infoDefaults } from './set-info';
+import { defaults as commonDefaults } from './common-options';
 import { printContract } from './print';
 
 export const defaults: Required<ERC20Options> = {
@@ -19,9 +19,9 @@ export const defaults: Required<ERC20Options> = {
   premint: '0',
   decimals: '18',
   mintable: false,
-  access: 'ownable',
-  upgradeable: false,
-  info: { ...infoDefaults },
+  access: commonDefaults.access,
+  upgradeable: commonDefaults.upgradeable,
+  info: commonDefaults.info
 } as const;
 
 export function printERC20(opts: ERC20Options): string {

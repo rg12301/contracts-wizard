@@ -10,6 +10,7 @@
   import { error } from '../error-tooltip';
 
   export const opts: Required<KindedOptions['ERC20']> = {
+    kind: 'ERC20',
     ...erc20defaults,
     premint: '', // default to empty premint in UI instead of 0
   };
